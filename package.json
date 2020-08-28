@@ -1,0 +1,8 @@
+{
+  "name": "sls-test-tools",
+  "version": "1.0.0",
+  "scripts": {},
+  "dependencies": {
+    "aws-sdk": "^2.711.0"
+  }
+}
