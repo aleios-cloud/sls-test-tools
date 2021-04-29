@@ -1,11 +1,20 @@
 {
   "name": "sls-test-tools",
   "version": "1.0.0",
-  "scripts": {},
+  "scripts": {
+    "lint": "eslint ./src",
+    "fix": "yarn lint --fix"
+  },
   "dependencies": {
-    "aws-sdk": "^2.711.0"
+    "aws-sdk": "^2.711.0",
+    "import-all.macro": "^3.1.0"
   },
   "devDependencies": {
-    "import-all.macro": "^3.1.0"
+    "eslint": "^7.25.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-prettier": "^3.4.0",
+    "prettier": "^2.2.1"
   }
 }

@@ -24,7 +24,7 @@ yarn add -D sls-test-tools
 
 ## Maintenance
 
-sls-dev-tools is currently being actively maintained. If you find a problem with the tool, let us know and we'll solve it as quickly as possible.
+sls-test-tools is currently being actively maintained. If you find a problem with the tool, let us know and we'll solve it as quickly as possible.
 ## Usage
 
 - Copy the `test-lib.js` file, along with the `package.json` to your project.
