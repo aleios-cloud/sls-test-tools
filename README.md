@@ -1,13 +1,30 @@
-# sls-test-tools
+<div align="center">
+  <h1>sls-test-tools</h1>
+
+
+  Custom Jest Assertions for Serverless Projects
+</div>
+
+<hr />
 
 `sls-test-tools` provides a range of utilities, setup, teardown and assertions to make it easier to write effective and high quality integration tests for Serverless Architectures on AWS using `TypeScript` & `jest`.
 
-## Status
 
-- This project is still in the idea phase.
+## Installation
 
-## Plan
+With npm:
+```sh
+npm install --save-dev sls-test-tools
+```
 
+With yarn:
+```sh
+yarn add -D sls-test-tools
+```
+
+## Maintenance
+
+sls-dev-tools is currently being actively maintained. If you find a problem with the tool, let us know and we'll solve it as quickly as possible.
 ## Usage
 
 - Copy the `test-lib.js` file, along with the `package.json` to your project.
