@@ -1,0 +1,39 @@
+
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "BenEllerby",
+      "name": "Ben Ellerby",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/11080984?v=4",
+      "profile": "https://medium.com/serverless-transformation",
+      "contributions": [
+        "code",
+        "doc",
+        "ideas",
+        "design",
+        "review"
+      ]
+    },
+    {
+      "login": "hamilton-s",
+      "name": "Sarah Hamilton",
+      "avatar_url": "https://https://avatars.githubusercontent.com/hamilton-s",
+      "profile": "https://github.com/hamilton-s",
+      "contributions": [
+        "code",
+        "doc",
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "sls-test-tools",
+  "projectOwner": "BenEllerby",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}
