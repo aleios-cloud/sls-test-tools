@@ -22,11 +22,20 @@
     {
       "login": "hamilton-s",
       "name": "Sarah Hamilton",
-      "avatar_url": "https://https://avatars.githubusercontent.com/hamilton-s",
+      "avatar_url": "https://avatars.githubusercontent.com/hamilton-s",
       "profile": "https://github.com/hamilton-s",
       "contributions": [
         "code",
         "doc",
+      ]
+    },
+    {
+      "login": "aghwi",
+      "name": "Alexander White",
+      "avatar_url": "https://avatars.githubusercontent.com/agwhi",
+      "profile": "https://github.com/agwhi",
+      "contributions": [
+        "code",
       ]
     }
   ],
