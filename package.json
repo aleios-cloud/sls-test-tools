@@ -1,15 +1,31 @@
 {
   "name": "sls-test-tools",
-  "version": "1.0.0",
+  "version": "1.0.0-alpha",
+  "description": "Custom Jest Assertions for Serverless Projects",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "repository": "git@github.com:BenEllerby/sls-test-tools.git",
+  "author": "Ben Ellerby",
+  "license": "MIT",
   "scripts": {
+    "build": "babel ./src --out-dir lib",
+    "build-maps": "babel ./src --out-dir lib --source-maps",
+    "dev": "babel ./src --out-dir lib --watch",
     "lint": "eslint ./src",
-    "fix": "yarn lint --fix"
+    "fix": "yarn lint --fix",
+    "release": "release-it"
   },
   "dependencies": {
     "aws-sdk": "^2.711.0",
     "import-all.macro": "^3.1.0"
   },
   "devDependencies": {
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "babel-plugin-macros": "^3.1.0",
     "eslint": "^7.25.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-prettier": "^8.3.0",
@@ -17,5 +33,23 @@
     "eslint-plugin-prettier": "^3.4.0",
     "prettier": "^2.2.1",
     "release-it": "^14.6.1"
-  }
+  },
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "node": true
+          }
+        }
+      ]
+    ],
+    "plugins": [
+      "macros"
+    ]
+  },
+  "files": [
+    "lib/**/*.js"
+  ]
 }
