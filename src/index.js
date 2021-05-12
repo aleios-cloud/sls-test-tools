@@ -1,19 +1,13 @@
-import AWS from 'aws-sdk';
+import AWS from "aws-sdk";
+import matchers from "./assertions";
 
-const profileArg = process.argv.filter((x) => x.startsWith('-profile='))[0];
-const profile = profileArg ? profileArg.split('=')[1] : 'default';
-const stackArg = process.argv.filter((x) => x.startsWith('-stack='))[0];
-const regionArg = process.argv.filter((x) => x.startsWith('-region='))[0];
+const profileArg = process.argv.filter((x) => x.startsWith("--profile="))[0];
+const profile = profileArg ? profileArg.split("=")[1] : "default";
+const stackArg = process.argv.filter((x) => x.startsWith("--stack="))[0];
+const regionArg = process.argv.filter((x) => x.startsWith("--region="))[0];
+const region = regionArg ? regionArg.split("=")[1] : "eu-west-2";
 
-export const stackName = stackArg.split('=')[1];
-
-let region = 'eu-west-2';
-
-if (regionArg) {
-  region = regionArg.split('=')[1];
-}
-
-jest.setTimeout(50000); // jest needs to wait for page render on Lambda.
+export const stackName = stackArg.split("=")[1];
 
 let creds;
 
@@ -38,6 +32,10 @@ AWS.config.credentials = creds;
 AWS.config.region = region;
 const cloudformation = new AWS.CloudFormation();
 export const ssm = new AWS.SSM();
+export const lambda = new AWS.Lambda();
+export const sqs = new AWS.SQS();
+export const eventBridge = new AWS.EventBridge();
+export const s3 = new AWS.S3();
 
 export const getStackResources = (stackName) =>
   cloudformation
@@ -51,25 +49,33 @@ const apigateway = new AWS.APIGateway();
 let apiKey = null;
 export const getOptions = async () => {
   if (!apiKey) {
-    const resources = await cloudformation.listStackResources({ StackName: stackName }).promise();
+    const resources = await cloudformation
+      .listStackResources({ StackName: stackName })
+      .promise();
     const id = resources.StackResourceSummaries.find(
-      r => r.ResourceType == 'AWS::ApiGateway::ApiKey'
+      (r) => r.ResourceType === "AWS::ApiGateway::ApiKey"
     ).PhysicalResourceId;
     const params = {
       apiKey: id,
-      includeValue: true
+      includeValue: true,
     };
     const data = await apigateway.getApiKey(params).promise();
     apiKey = data.value;
   }
 
   return {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'x-api-key': apiKey,
-      'Content-Type': 'application/json',
-    }
-  }
+      "x-api-key": apiKey,
+      "Content-Type": "application/json",
+    },
+  };
+};
+
+const jestExpect = global.expect;
+
+if (jestExpect !== undefined) {
+  jestExpect.extend(matchers);
+} else {
+  console.error("Unable to find Jest's global expect.");
 }
-
-
