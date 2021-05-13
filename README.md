@@ -1,5 +1,6 @@
 <div align="center">
   <h1>sls-test-tools</h1>
+  ![installTool](./img/logo.png)
 
 Custom Jest Assertions for Serverless Projects
 
