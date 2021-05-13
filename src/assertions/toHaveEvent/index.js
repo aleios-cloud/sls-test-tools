@@ -1,6 +1,6 @@
 export default {
-  toHaveSentEventBridgeMessage(sqsResult) {
-    if (sqsResult.Messages) {
+  toHaveEvent(eventBridgeEvents) {
+    if (eventBridgeEvents) {
       return {
         message: () => "expected to have message in EventBridge Bus",
         pass: true,

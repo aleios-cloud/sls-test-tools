@@ -1,6 +1,7 @@
 export default {
-  toHaveSentEventWithSourceEqualTo(sqsResult, expectedSourceName) {
-    const receivedSource = JSON.parse(sqsResult.Messages[0].Body).source;
+  toHaveEventWithSource(eventBridgeEvents, expectedSourceName) {
+    const receivedSource = JSON.parse(eventBridgeEvents.Messages[0].Body)
+      .source;
     if (receivedSource === expectedSourceName) {
       return {
         message: () =>
