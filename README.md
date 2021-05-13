@@ -1,10 +1,11 @@
 <div align="center">
   <h1>sls-test-tools</h1>
-  ![installTool](./img/logo.png)
 
 Custom Jest Assertions for Serverless Projects
 
 </div>
+
+![logo](./img/logo.png)
 
 <hr />
 
@@ -71,6 +72,11 @@ getOptions() - get options for making requests to AWS
 - `yarn jest '-profile=default' '-stack=my-service-dev' --runInBand`
 
 ```
+import { AWSClient, EventBridge } from "sls-test-tools";
+
+const lambda = new AWSClient.Lambda()
+let eventBridge;
+const s3 = new AWSClient.S3()
 
 describe("Integration Testing Event Bridge", () => {
   beforeAll(async () => {
