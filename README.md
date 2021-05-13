@@ -8,7 +8,9 @@ Custom Jest Assertions for Serverless Projects
 
 <hr />
 
-`sls-test-tools` provides a range of utilities, setup, teardown and assertions to make it easier to write effective and high quality integration tests for Serverless Architectures on AWS using `TypeScript` & `jest`.
+`sls-test-tools` provides a range of utilities, setup, teardown and assertions to make it easier to write effective and high quality integration tests for Serverless Architectures on AWS.
+
+**🚧 This is in an alpha state while we trial a few initial assertions and get feedback on the approach and structure. 🚧**
 
 ## Installation
 
@@ -26,11 +28,12 @@ yarn add -D sls-test-tools
 
 ## Maintenance
 
-sls-test-tools is currently being actively maintained. If you find a problem with the tool, let us know and we'll solve it as quickly as possible.
+sls-test-tools is currently being actively maintained, yet is in alpha. Your feedback is very welcome.
 
 ## Assertions:
 
 ### EventBridge
+An interface to the deployed EventBridge, allowing events to be injected and intercepted via an SQS queue and EventBridge rule.
 
 ```
     expect(eventBridgeEvents).toHaveEvent();
@@ -41,10 +44,9 @@ sls-test-tools is currently being actively maintained. If you find a problem wit
 ## Helpers
 
 ### General
-
-```
 AWSClient - An AWS client with credentials set up
 
+```
 getStackResources(stackName) - get information about a stack
 getOptions() - get options for making requests to AWS
 ```
@@ -54,7 +56,7 @@ getOptions() - get options for making requests to AWS
 #### Static
 
 ```
-    EventBridge.build(busName) - create a EventBridge instance with helper functionns
+    EventBridge.build(busName) - create a EventBridge instance to allow events to be injected and intercepted
 ```
 
 #### Instance
@@ -86,7 +88,7 @@ describe("Integration Testing Event Bridge", () => {
     await eventBridge.destroy()
   });
 
-  it("lambda publish event correctly", async () => {
+  it("correctly publishes an event to the event bus when the lambda is invoked", async () => {
     const event = {
       body: JSON.stringify({
         filename: filename,
@@ -105,7 +107,7 @@ describe("Integration Testing Event Bridge", () => {
     expect(eventBridgeEvents).toHaveEventWithSource("order.created");
   });
 
-  it("pdf is saved when an order is created", async () => {
+  it("correctly generates a PDF when an order is created", async () => {
     await eventBridge
       .publishEvent("order.created", "example", JSON.stringify({ filename: filename }));
 
