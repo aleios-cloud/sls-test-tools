@@ -6,12 +6,12 @@
   "directories": {
     "lib": "lib"
   },
-  "repository": "git@github.com:BenEllerby/sls-test-tools.git",
+  "repository": "git@github.com:Theodo-UK/sls-test-tools.git",
   "bugs": {
     "url": "https://github.com/Theodo-UK/sls-test-tools/issues"
   },
   "homepage": "https://github.com/Theodo-UK/sls-test-tools#readme",
-  "author": "Ben Ellerby",
+  "author": "Theodo UK",
   "license": "MIT",
   "scripts": {
     "build": "babel ./src --out-dir lib",
