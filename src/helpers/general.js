@@ -34,9 +34,9 @@ export const AWSClient = AWS;
 
 const cloudformation = new AWSClient.CloudFormation();
 
-export const getStackResources = (stackName) =>
+export const getStackResources = (stack) =>
   cloudformation
-    .describeStacks({ StackName: stackName })
+    .describeStacks({ StackName: stack })
     .promise()
     .catch((error) => {
       console.error(error);
