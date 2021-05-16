@@ -35,12 +35,16 @@ sls-test-tools is currently being actively maintained, yet is in alpha. Your fee
 ## Assertions:
 
 ### EventBridge
-An interface to the deployed EventBridge, allowing events to be injected and intercepted via an SQS queue and EventBridge rule.
-
 ```
     expect(eventBridgeEvents).toHaveEvent();
 
     expect(eventBridgeEvents).toHaveEventWithSource("order.created");
+```
+
+### S3
+```
+    await expect("BUCKET NAME").toHaveS3ObjectWithNameEqualTo("FILE NAME");
+    // note this is an async assertion and requires "await"
 ```
 
 ## Helpers
@@ -54,6 +58,7 @@ getOptions() - get options for making requests to AWS
 ```
 
 ### EventBridge
+An interface to the deployed EventBridge, allowing events to be injected and intercepted via an SQS queue and EventBridge rule.
 
 #### Static
 
