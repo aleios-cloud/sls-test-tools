@@ -4,7 +4,14 @@ export default class EventBridge {
   async init(eventBridgeName) {
     this.eventBridgeClient = new AWSClient.EventBridge();
     this.eventBridgeName = eventBridgeName;
+    const keepArg = process.argv.filter((x) => x.startsWith("--keep="))[0];
+    this.keep = keepArg ? keepArg.split("=")[1] : false;
     this.sqsClient = new AWSClient.SQS();
+    if (!this.keep) {
+      console.info(
+        "If running repeatedly add '--keep=true' to keep testing resources up to avoid creation throttles"
+      );
+    }
     const queueName = `${eventBridgeName}-testing-queue`;
     const queueResult = await this.sqsClient
       .createQueue({
@@ -87,6 +94,8 @@ export default class EventBridge {
       })
       .promise();
 
+    await this.getEvents(); // need to clear this manual published event from the SQS observer queue.
+
     return result;
   }
 
@@ -99,6 +108,19 @@ export default class EventBridge {
 
     const result = await this.sqsClient.receiveMessage(queueParams).promise();
 
+    const messageHandlers = result.Messages.map((message) => ({
+      Id: message.MessageId,
+      ReceiptHandle: message.ReceiptHandle,
+    }));
+    if (messageHandlers.length > 0) {
+      await this.sqsClient
+        .deleteMessageBatch({
+          Entries: messageHandlers,
+          QueueUrl: this.QueueUrl,
+        })
+        .promise();
+    }
+
     return result;
   }
 
@@ -108,17 +130,20 @@ export default class EventBridge {
         QueueUrl: this.QueueUrl,
       })
       .promise();
-
     return result;
   }
 
   async destroy() {
-    const result = await this.sqsClient
-      .deleteQueue({
-        QueueUrl: this.QueueUrl,
-      })
-      .promise();
+    if (!this.keep) {
+      await this.sqsClient
+        .deleteQueue({
+          QueueUrl: this.QueueUrl,
+        })
+        .promise();
+    } else {
+      await this.clear();
+    }
 
-    return result;
+    return true;
   }
 }
