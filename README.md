@@ -72,7 +72,19 @@ getOptions() - get options for making requests to AWS
 
 ## Running with `jest`
 
-- `yarn jest '--profile=default' '--stack=my-service-dev' --runInBand`
+### Arguments
+- When running tests with `jest` using `sls-test-tools` matchers there are certain parameters needed for `sls-test-tools` to make assertions.
+- These are passed as command line arguments, using quotation to match `jests` convention on test arguments.
+
+**Required**
+  - `'--stack=my-service-dev'` - the CloudFormation stack name of the stack under test.
+
+**Optional**
+  - `'--profile=[PROFILE NAME]'` (will default to `default`)
+  - `'--region=[AWS Region]'` (will default to `eu-west-2`)
+  - `'--keep=true'` - keeps testing resources up to avoid creation throttles (e.g. SQS Queue created for EventBridge assertions)
+
+- To avoid issues we recommend `--runInBand`
 
 ```
 import { AWSClient, EventBridge } from "sls-test-tools";
