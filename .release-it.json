@@ -3,7 +3,6 @@
     "release": true
   },
   "hooks": {
-    "before:init": "yarn lint",
     "after:my-plugin:bump": "./bin/my-script.sh",
     "after:bump": "yarn build",
     "after:git:release": "echo After git push, before github release",
