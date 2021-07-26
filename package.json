@@ -1,6 +1,6 @@
 {
   "name": "sls-test-tools",
-  "version": "1.0.0-alpha.4",
+  "version": "1.0.0-alpha.5",
   "description": "Custom Jest Assertions for Serverless Projects",
   "main": "lib/index.js",
   "directories": {
