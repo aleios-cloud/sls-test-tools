@@ -1,14 +1,13 @@
+import { testResult } from "../../utils/testResult";
+
 export default {
   toHaveEvent(eventBridgeEvents) {
+    let message;
     if (eventBridgeEvents) {
-      return {
-        message: () => "expected to have message in EventBridge Bus",
-        pass: true,
-      };
+      message = "expected to have message in EventBridge Bus";
+      return testResult(message, true);
     }
-    return {
-      message: () => "no message intercepted from EventBridge Bus",
-      pass: false,
-    };
+    message = "no message intercepted from EventBridge Bus";
+    return testResult(message, false);
   },
 };

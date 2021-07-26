@@ -63,6 +63,13 @@ Note: these async assertions require "await"
 
 where CONTENT_TYPE are [standards MIME types](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types)
 
+```
+    await expect({
+      bucketName: "BUCKET_NAME",
+      objectName: "FILE NAME",
+    }).toHaveContentEqualTo("CONTENT");
+```
+
 ## Helpers
 
 ### General
