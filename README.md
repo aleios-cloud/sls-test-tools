@@ -55,7 +55,10 @@ Note: these async assertions require "await"
 ```
 
 ```
-    await expect("BUCKET NAME").toHaveS3ObjectWithContentTypeEqualTo("OBJECT NAME", "CONTENT_TYPE");
+    await expect({
+      bucketName: "BUCKET_NAME",
+      objectName: "FILE NAME",
+    }).toHaveContentTypeEqualTo("CONTENT_TYPE");;
 ```
 
 where CONTENT_TYPE are [standards MIME types](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types)

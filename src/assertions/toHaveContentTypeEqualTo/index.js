@@ -2,11 +2,7 @@ import { AWSClient } from "../../helpers/general";
 import { testResult } from "../../utils/testResult";
 
 export default {
-  async toHaveS3ObjectWithContentTypeEqualTo(
-    bucketName,
-    objectName,
-    contentType
-  ) {
+  async toHaveContentTypeEqualTo({ bucketName, objectName }, contentType) {
     const s3 = new AWSClient.S3();
     const params = {
       Bucket: bucketName,
