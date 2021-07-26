@@ -44,7 +44,7 @@ sls-test-tools is currently being actively maintained, yet is in alpha. Your fee
 
 ### S3
 
-// note these is an async assertion and requires "await"
+Note: these async assertions require "await"
 
 ```
     await expect("BUCKET NAME").toHaveS3ObjectWithNameEqualTo("FILE NAME");
@@ -53,6 +53,12 @@ sls-test-tools is currently being actively maintained, yet is in alpha. Your fee
 ```
     await expect("BUCKET NAME").toExistAsS3Bucket();
 ```
+
+```
+    await expect("BUCKET NAME").toHaveS3ObjectWithContentTypeEqualTo("OBJECT NAME", "CONTENT_TYPE");
+```
+
+where CONTENT_TYPE are [standards MIME types](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types)
 
 ## Helpers
 
