@@ -1,4 +1,5 @@
 import { AWSClient } from "../../helpers/general";
+import { testResult } from "../../utils/testResult";
 
 export default {
   async toHaveS3ObjectWithContentTypeEqualTo(
@@ -11,11 +12,6 @@ export default {
       Bucket: bucketName,
       Key: objectName,
     };
-
-    const testResult = (message, pass) => ({
-      message: () => message,
-      pass,
-    });
 
     let message;
     try {
