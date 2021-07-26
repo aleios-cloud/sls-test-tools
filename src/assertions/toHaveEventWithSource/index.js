@@ -1,18 +1,15 @@
+import { testResult } from "../../utils/testResult";
+
 export default {
   toHaveEventWithSource(eventBridgeEvents, expectedSourceName) {
+    let message;
     const receivedSource = JSON.parse(eventBridgeEvents.Messages[0].Body)
       .source;
     if (receivedSource === expectedSourceName) {
-      return {
-        message: () =>
-          `expected sent event to have source ${expectedSourceName}`,
-        pass: true,
-      };
+      message = `expected sent event to have source ${expectedSourceName}`;
+      return testResult(message, true);
     }
-    return {
-      message: () =>
-        `sent event source "${receivedSource}" does not match expected source "${expectedSourceName}"`,
-      pass: false,
-    };
+    message = `sent event source "${receivedSource}" does not match expected source "${expectedSourceName}"`;
+    return testResult(message, false);
   },
 };
