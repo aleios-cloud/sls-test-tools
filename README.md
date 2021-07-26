@@ -35,6 +35,7 @@ sls-test-tools is currently being actively maintained, yet is in alpha. Your fee
 ## Assertions:
 
 ### EventBridge
+
 ```
     expect(eventBridgeEvents).toHaveEvent();
 
@@ -42,14 +43,21 @@ sls-test-tools is currently being actively maintained, yet is in alpha. Your fee
 ```
 
 ### S3
+
+// note these is an async assertion and requires "await"
+
 ```
     await expect("BUCKET NAME").toHaveS3ObjectWithNameEqualTo("FILE NAME");
-    // note this is an async assertion and requires "await"
+```
+
+```
+    await expect("BUCKET NAME").toExistAsS3Bucket();
 ```
 
 ## Helpers
 
 ### General
+
 AWSClient - An AWS client with credentials set up
 
 ```
@@ -58,6 +66,7 @@ getOptions() - get options for making requests to AWS
 ```
 
 ### EventBridge
+
 An interface to the deployed EventBridge, allowing events to be injected and intercepted via an SQS queue and EventBridge rule.
 
 #### Static
@@ -78,16 +87,19 @@ An interface to the deployed EventBridge, allowing events to be injected and int
 ## Running with `jest`
 
 ### Arguments
+
 - When running tests with `jest` using `sls-test-tools` matchers there are certain parameters needed for `sls-test-tools` to make assertions.
 - These are passed as command line arguments, using quotation to match `jests` convention on test arguments.
 
 **Required**
-  - `'--stack=my-service-dev'` - the CloudFormation stack name of the stack under test.
+
+- `'--stack=my-service-dev'` - the CloudFormation stack name of the stack under test.
 
 **Optional**
-  - `'--profile=[PROFILE NAME]'` (will default to `default`)
-  - `'--region=[AWS Region]'` (will default to `eu-west-2`)
-  - `'--keep=true'` - keeps testing resources up to avoid creation throttles (e.g. SQS Queue created for EventBridge assertions)
+
+- `'--profile=[PROFILE NAME]'` (will default to `default`)
+- `'--region=[AWS Region]'` (will default to `eu-west-2`)
+- `'--keep=true'` - keeps testing resources up to avoid creation throttles (e.g. SQS Queue created for EventBridge assertions)
 
 - To avoid issues we recommend `--runInBand`
 
@@ -127,21 +139,22 @@ describe("Integration Testing Event Bridge", () => {
   });
 
   it("correctly generates a PDF when an order is created", async () => {
+    const bucketName = example-bucket
     await eventBridge
       .publishEvent("order.created", "example", JSON.stringify({ filename: filename }));
 
     await sleep(5000); // wait 5 seconds to allow event to pass
 
     const params = {
-      Bucket: "example-dev-thumbnails-bucket",
+      Bucket: bucketName,
       Key: filename,
     };
 
     // Assert that file was added to the S3 bucket
-    const obj = await s3.getObject(params).promise();
-    expect(obj.ContentType).toBe("application/pdf");
+    await expect("example-dev-thumbnails-bucket").toHaveS3ObjectWithNameEqualTo(
+      filename
+    );
   });
-
 ```
 
 ## Contributors ✨
