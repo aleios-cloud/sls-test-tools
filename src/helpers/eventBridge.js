@@ -108,7 +108,7 @@ export default class EventBridge {
 
     const result = await this.sqsClient.receiveMessage(queueParams).promise();
 
-    const messageHandlers = result.Messages.map((message) => ({
+    const messageHandlers = result.Messages?.map((message) => ({
       Id: message.MessageId,
       ReceiptHandle: message.ReceiptHandle,
     }));
