@@ -3,13 +3,15 @@ import { testResult } from "../../utils/testResult";
 export default {
   toHaveEventWithSource(eventBridgeEvents, expectedSourceName) {
     let message;
-    const receivedSource = JSON.parse(eventBridgeEvents.Messages[0].Body)
-      .source;
-    if (receivedSource === expectedSourceName) {
+    const hasMatchingSource = eventBridgeEvents.Messages.some(
+      (event) => JSON.parse(event.Body).source === expectedSourceName
+    );
+
+    if (hasMatchingSource) {
       message = `expected sent event to have source ${expectedSourceName}`;
       return testResult(message, true);
     }
-    message = `sent event source "${receivedSource}" does not match expected source "${expectedSourceName}"`;
+    message = `noSuchEvent: expected event with source matching "${expectedSourceName}"`;
     return testResult(message, false);
   },
 };
