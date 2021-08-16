@@ -4,6 +4,8 @@ export default class EventBridge {
   async init(eventBridgeName) {
     this.eventBridgeClient = new AWSClient.EventBridge();
     this.eventBridgeName = eventBridgeName;
+    this.ruleName = `test-${eventBridgeName}-rule`;
+
     const keepArg = process.argv.filter((x) => x.startsWith("--keep="))[0];
     this.keep = keepArg ? keepArg.split("=")[1] : false;
     this.sqsClient = new AWSClient.SQS();
@@ -27,10 +29,9 @@ export default class EventBridge {
       account: [`${accountId}`],
     };
 
-    const ruleName = `test-${eventBridgeName}-rule`;
     await this.eventBridgeClient
       .putRule({
-        Name: ruleName,
+        Name: this.ruleName,
         EventBusName: eventBridgeName,
         EventPattern: JSON.stringify(pattern),
         State: "ENABLED",
@@ -40,7 +41,7 @@ export default class EventBridge {
     await this.eventBridgeClient
       .putTargets({
         EventBusName: eventBridgeName,
-        Rule: ruleName,
+        Rule: this.ruleName,
         Targets: [
           {
             Arn: sqsArn,
@@ -138,6 +139,14 @@ export default class EventBridge {
       await this.sqsClient
         .deleteQueue({
           QueueUrl: this.QueueUrl,
+        })
+        .promise();
+
+      await this.eventBridgeClient
+        .deleteRule({
+          Name: this.ruleName,
+          EventBusName: this.eventBridgeName,
+          Force: true,
         })
         .promise();
     } else {
