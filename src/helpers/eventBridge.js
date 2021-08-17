@@ -143,11 +143,13 @@ export default class EventBridge {
         })
         .promise();
 
-      await this.eventBridgeClient.removeTargets({
-        Ids: [this.targetId],
-        Rule: this.ruleName,
-        EventBusName: this.eventBridgeName,
-      });
+      await this.eventBridgeClient
+        .removeTargets({
+          Ids: [this.targetId],
+          Rule: this.ruleName,
+          EventBusName: this.eventBridgeName,
+        })
+        .promise();
 
       await this.eventBridgeClient
         .deleteRule({
