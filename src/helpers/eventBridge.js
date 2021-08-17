@@ -5,6 +5,7 @@ export default class EventBridge {
     this.eventBridgeClient = new AWSClient.EventBridge();
     this.eventBridgeName = eventBridgeName;
     this.ruleName = `test-${eventBridgeName}-rule`;
+    this.targetId = "1";
 
     const keepArg = process.argv.filter((x) => x.startsWith("--keep="))[0];
     this.keep = keepArg ? keepArg.split("=")[1] : false;
@@ -45,7 +46,7 @@ export default class EventBridge {
         Targets: [
           {
             Arn: sqsArn,
-            Id: "1",
+            Id: this.targetId,
           },
         ],
       })
@@ -142,11 +143,16 @@ export default class EventBridge {
         })
         .promise();
 
+      await this.eventBridgeClient.removeTargets({
+        Ids: [this.targetId],
+        Rule: this.ruleName,
+        EventBusName: this.eventBridgeName,
+      });
+
       await this.eventBridgeClient
         .deleteRule({
           Name: this.ruleName,
           EventBusName: this.eventBridgeName,
-          Force: true,
         })
         .promise();
     } else {
