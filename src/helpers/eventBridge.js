@@ -27,24 +27,25 @@ export default class EventBridge {
       account: [`${accountId}`],
     };
 
-    const ruleName = `test-${eventBridgeName}-rule`;
+    this.ruleName = `test-${eventBridgeName}-rule`;
     await this.eventBridgeClient
       .putRule({
-        Name: ruleName,
+        Name: this.ruleName,
         EventBusName: eventBridgeName,
         EventPattern: JSON.stringify(pattern),
         State: "ENABLED",
       })
       .promise();
 
+    this.targetId = "1";
     await this.eventBridgeClient
       .putTargets({
         EventBusName: eventBridgeName,
-        Rule: ruleName,
+        Rule: this.ruleName,
         Targets: [
           {
             Arn: sqsArn,
-            Id: "1",
+            Id: this.targetId,
           },
         ],
       })
@@ -140,6 +141,15 @@ export default class EventBridge {
           QueueUrl: this.QueueUrl,
         })
         .promise();
+      await this.eventBridgeClient.removeTargets({
+        EventBusName: this.eventBridgeName,
+        Rule: this.ruleName,
+        Ids: [this.targetId],
+      }).promise();
+      await this.eventBridgeClient.deleteRule({
+        Name: this.ruleName,
+        EventBusName: this.eventBridgeName,
+      }).promise();
     } else {
       await this.clear();
     }
