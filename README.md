@@ -36,76 +36,70 @@ sls-test-tools is currently being actively maintained, yet is in alpha. Your fee
 
 ### EventBridge
 
-```
-    expect(eventBridgeEvents).toHaveEvent();
+```js
+expect(eventBridgeEvents).toHaveEvent();
 
-    expect(eventBridgeEvents).toHaveEventWithSource("order.created");
+expect(eventBridgeEvents).toHaveEventWithSource("order.created");
 ```
 
 ### S3
 
-Note: these async assertions require "await"
+Note: these async assertions require `await`.
 
-```
-    await expect("BUCKET NAME").toHaveS3ObjectWithNameEqualTo("FILE NAME");
-```
-
-```
-    await expect("BUCKET NAME").toExistAsS3Bucket();
+```js
+await expect("BUCKET NAME").toHaveS3ObjectWithNameEqualTo("FILE NAME");
 ```
 
-```
-    await expect({
-      bucketName: "BUCKET_NAME",
-      objectName: "FILE NAME",
-    }).toHaveContentTypeEqualTo("CONTENT_TYPE");;
+```js
+await expect("BUCKET NAME").toExistAsS3Bucket();
 ```
 
-where CONTENT_TYPE are [standards MIME types](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types)
-
+```js
+await expect({
+  bucketName: "BUCKET_NAME",
+  objectName: "FILE NAME",
+}).toHaveContentTypeEqualTo("CONTENT_TYPE");
 ```
-    await expect({
-      bucketName: "BUCKET_NAME",
-      objectName: "FILE NAME",
-    }).toHaveContentEqualTo("CONTENT");
+
+where `CONTENT_TYPE` are [standards MIME types](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types)
+
+```js
+await expect({
+  bucketName: "BUCKET_NAME",
+  objectName: "FILE NAME",
+}).toHaveContentEqualTo("CONTENT");
 ```
 
 ## Helpers
 
-### General
+### AWSClient
 
-AWSClient - An AWS client with credentials set up
+An AWS client with credentials set up
 
-```
-getStackResources(stackName) - get information about a stack
-getOptions() - get options for making requests to AWS
-```
+- `getStackResources(stackName)` - get information about a stack
+- `getOptions()` - get options for making requests to AWS
 
 ### EventBridge
 
-An interface to the deployed EventBridge, allowing events to be injected and intercepted via an SQS queue and EventBridge rule.
+An interface to the deployed EventBridge, allowing events to be injected and intercepted via a SQS queue and EventBridge rule.
 
 #### Static
 
-```
-    EventBridge.build(busName) - create a EventBridge instance to allow events to be injected and intercepted
-```
+- `EventBridge.build(busName)` - create a EventBridge instance to allow events to be injected and intercepted
 
 #### Instance
 
-```
-    eventBridge.publishEvent(source, detailType, detail) - publish an event to the bus
-    eventBridge.getEvents() - get the events that have been sent to the bus
-    eventBridge.clear() - clear old messages
-    eventBridge.destroy() - remove infastructure used to track events
-```
+ - `eventBridge.publishEvent(source, detailType, detail)` - publish an event to the bus
+ - `eventBridge.getEvents()` - get the events that have been sent to the bus
+ - `eventBridge.clear()` - clear old messages
+ - `eventBridge.destroy()` - remove infastructure used to track events
 
 ## Running with `jest`
 
 ### Arguments
 
 - When running tests with `jest` using `sls-test-tools` matchers there are certain parameters needed for `sls-test-tools` to make assertions.
-- These are passed as command line arguments, using quotation to match `jests` convention on test arguments.
+- These are passed as command line arguments, using quotation to match `jest` convention on test arguments.
 
 **Required**
 
@@ -119,20 +113,20 @@ An interface to the deployed EventBridge, allowing events to be injected and int
 
 - To avoid issues we recommend `--runInBand`
 
-```
+```js
 import { AWSClient, EventBridge } from "sls-test-tools";
 
-const lambda = new AWSClient.Lambda()
+const lambda = new AWSClient.Lambda();
 let eventBridge;
-const s3 = new AWSClient.S3()
+const s3 = new AWSClient.S3();
 
 describe("Integration Testing Event Bridge", () => {
   beforeAll(async () => {
-    eventBridge = await EventBridge.build("event-bridge")
+    eventBridge = await EventBridge.build("event-bridge");
   });
 
   afterAll(async () => {
-    await eventBridge.destroy()
+    await eventBridge.destroy();
   });
 
   it("correctly publishes an event to the event bus when the lambda is invoked", async () => {
@@ -149,15 +143,14 @@ describe("Integration Testing Event Bridge", () => {
     };
     await lambda.invoke(params).promise();
 
-    const eventBridgeEvents = await eventBridge.getEvents()
+    const eventBridgeEvents = await eventBridge.getEvents();
     expect(eventBridgeEvents).toHaveEvent();
     expect(eventBridgeEvents).toHaveEventWithSource("order.created");
   });
 
   it("correctly generates a PDF when an order is created", async () => {
-    const bucketName = example-bucket
-    await eventBridge
-      .publishEvent("order.created", "example", JSON.stringify({ filename: filename }));
+    const bucketName = "example-bucket";
+    await eventBridge.publishEvent("order.created", "example", JSON.stringify({ filename: filename }));
 
     await sleep(5000); // wait 5 seconds to allow event to pass
 
@@ -167,10 +160,9 @@ describe("Integration Testing Event Bridge", () => {
     };
 
     // Assert that file was added to the S3 bucket
-    await expect("example-dev-thumbnails-bucket").toHaveS3ObjectWithNameEqualTo(
-      filename
-    );
+    await expect("example-dev-thumbnails-bucket").toHaveS3ObjectWithNameEqualTo(filename);
   });
+});
 ```
 
 ## Contributors ✨
