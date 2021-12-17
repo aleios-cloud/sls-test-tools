@@ -14,7 +14,8 @@
     "plugins": [{ "transform": "@zerollup/ts-transform-paths" }],
     "emitDeclarationOnly": true,
     "outDir": "./lib/types",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "esModuleInterop": true
   },
   "include": ["./src/**/*.ts"]
 }
