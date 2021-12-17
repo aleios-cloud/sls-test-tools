@@ -1,7 +1,14 @@
 import { AWSClient, region } from "./general";
 
 export default class EventBridge {
-  async init(eventBridgeName) {
+  QueueUrl: any;
+  eventBridgeClient: any;
+  eventBridgeName: any;
+  keep: any;
+  ruleName: any;
+  sqsClient: any;
+  targetId: any;
+  async init(eventBridgeName: any) {
     this.eventBridgeClient = new AWSClient.EventBridge();
     this.eventBridgeName = eventBridgeName;
     this.ruleName = `test-${eventBridgeName}-rule`;
@@ -76,13 +83,14 @@ export default class EventBridge {
       .promise();
   }
 
-  static async build(eventBridgeName) {
+  static async build(eventBridgeName: any) {
     const eventBridge = new EventBridge();
     await eventBridge.init(eventBridgeName);
+
     return eventBridge;
   }
 
-  async publishEvent(source, detailType, detail) {
+  async publishEvent(source: any, detailType: any, detail: any) {
     const result = await this.eventBridgeClient
       .putEvents({
         Entries: [
@@ -110,7 +118,7 @@ export default class EventBridge {
 
     const result = await this.sqsClient.receiveMessage(queueParams).promise();
 
-    const messageHandlers = result.Messages?.map((message) => ({
+    const messageHandlers = result.Messages?.map((message: any) => ({
       Id: message.MessageId,
       ReceiptHandle: message.ReceiptHandle,
     }));
@@ -132,6 +140,7 @@ export default class EventBridge {
         QueueUrl: this.QueueUrl,
       })
       .promise();
+
     return result;
   }
 
