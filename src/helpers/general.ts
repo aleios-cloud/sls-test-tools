@@ -49,15 +49,30 @@ export const getOptions = async () => {
     const resources = await cloudformation
       .listStackResources({ StackName: stackName })
       .promise();
-    // @ts-expect-error ts-migrate(2532) FIXME: Object is possibly 'undefined'.
-    const id = resources.StackResourceSummaries.find(
+
+    const stackResourceSummaries = resources.StackResourceSummaries;
+    if (stackResourceSummaries === undefined) {
+      return;
+    }
+
+    const stackResourceSummary = stackResourceSummaries.find(
       (r) => r.ResourceType === "AWS::ApiGateway::ApiKey"
-    ).PhysicalResourceId;
+    );
+
+    if (stackResourceSummary === undefined) {
+      return;
+    }
+
+    const id = stackResourceSummary.PhysicalResourceId;
+
+    if (id === undefined) {
+      return;
+    }
     const params = {
       apiKey: id,
       includeValue: true,
     };
-    // @ts-expect-error ts-migrate(2769) FIXME: No overload matches this call.
+
     const data = await apigateway.getApiKey(params).promise();
     apiKey = data.value;
   }
