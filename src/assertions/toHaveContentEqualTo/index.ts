@@ -1,5 +1,6 @@
 import { AWSClient } from "../../helpers/general";
 import { testResult } from "../../utils/testResult";
+import { isNoSuchBucketError, isNoSuchKeyError } from "../utils";
 
 export default {
   async toHaveContentEqualTo({ bucketName, objectName }: any, content: any) {
@@ -21,12 +22,12 @@ export default {
 
       return testResult(message, false);
     } catch (error) {
-      if (error.code === "NoSuchKey") {
+      if (isNoSuchKeyError(error)) {
         message = `expected ${bucketName} to have object with name ${objectName} - not found`;
 
         return testResult(message, false);
       }
-      if (error.code === "NoSuchBucket") {
+      if (isNoSuchBucketError(error)) {
         message = `expected ${bucketName} to exist - not found`;
 
         return testResult(message, false);

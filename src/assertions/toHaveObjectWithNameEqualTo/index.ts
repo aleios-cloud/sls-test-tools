@@ -1,5 +1,6 @@
 import { AWSClient } from "../../helpers/general";
 import { testResult } from "../../utils/testResult";
+import { isNoSuchKeyError } from "../utils";
 
 export default {
   async toHaveS3ObjectWithNameEqualTo(bucketName: any, objectName: any) {
@@ -16,7 +17,7 @@ export default {
 
       return testResult(message, true);
     } catch (error) {
-      if (error.code === "NoSuchKey") {
+      if (isNoSuchKeyError(error)) {
         message = `expected ${bucketName} to have object with name ${objectName} - not found`;
 
         return testResult(message, false);

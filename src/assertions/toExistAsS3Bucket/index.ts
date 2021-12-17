@@ -1,5 +1,6 @@
 import { AWSClient } from "../../helpers/general";
 import { testResult } from "../../utils/testResult";
+import { is404Error } from "../utils";
 
 export default {
   async toExistAsS3Bucket(bucketName: any) {
@@ -15,7 +16,7 @@ export default {
 
       return testResult(message, true);
     } catch (error) {
-      if (error.statusCode === 404) {
+      if (is404Error(error)) {
         message = `expected S3 bucket to exist with name ${bucketName} - not found`;
 
         return testResult(message, false);
