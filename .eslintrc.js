@@ -56,6 +56,7 @@ module.exports = {
   overrides: [
     {
       files: ["**/*.ts?(x)"],
+      settings: { "import/resolver": { typescript: {} } },
       extends: [
         "plugin:@typescript-eslint/recommended",
         "plugin:@typescript-eslint/recommended-requiring-type-checking",

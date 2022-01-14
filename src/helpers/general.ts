@@ -1,4 +1,6 @@
-import AWS from "aws-sdk";
+import AWS, { AWSError } from "aws-sdk";
+import { DescribeStacksOutput } from "aws-sdk/clients/cloudformation";
+import { PromiseResult } from "aws-sdk/lib/request";
 
 const profileArg = process.argv.filter((x) => x.startsWith("--profile="))[0];
 const profile = profileArg ? profileArg.split("=")[1] : "default";
@@ -10,7 +12,10 @@ export const stackName = stackArg.split("=")[1];
 
 let creds;
 
-if (process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY) {
+if (
+  process.env.AWS_ACCESS_KEY_ID !== undefined &&
+  process.env.AWS_SECRET_ACCESS_KEY !== undefined
+) {
   creds = new AWS.Credentials({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
@@ -21,7 +26,7 @@ if (process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY) {
     profile,
     callback: (err) => {
       if (err) {
-        console.error(`SharedIniFileCreds Error: ${err}`);
+        console.error(`SharedIniFileCreds Error: ${err.name} - ${err.message}`);
       }
     },
   });
@@ -34,7 +39,9 @@ export const AWSClient = AWS;
 
 const cloudformation = new AWSClient.CloudFormation();
 
-export const getStackResources = (stack: any) =>
+export const getStackResources = (
+  stack: string | undefined
+): Promise<void | PromiseResult<DescribeStacksOutput, AWSError>> =>
   cloudformation
     .describeStacks({ StackName: stack })
     .promise()
@@ -43,9 +50,15 @@ export const getStackResources = (stack: any) =>
     });
 
 const apigateway = new AWSClient.APIGateway();
-let apiKey: any = null;
-export const getOptions = async () => {
-  if (!apiKey) {
+let apiKey: string | null = null;
+
+interface GetOptionsOutput {
+  method: string;
+  headers: { "x-api-key": string | null; "Content-Type": string };
+}
+
+export const getOptions = async (): Promise<void | GetOptionsOutput> => {
+  if (apiKey === null) {
     const resources = await cloudformation
       .listStackResources({ StackName: stackName })
       .promise();
@@ -74,7 +87,7 @@ export const getOptions = async () => {
     };
 
     const data = await apigateway.getApiKey(params).promise();
-    apiKey = data.value;
+    apiKey = data.value !== undefined ? data.value : null;
   }
 
   return {

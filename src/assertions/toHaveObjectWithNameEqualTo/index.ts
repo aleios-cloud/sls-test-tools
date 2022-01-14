@@ -1,9 +1,12 @@
-import { AWSClient } from "../../helpers/general";
-import { testResult } from "../../utils/testResult";
+import { AWSClient } from "helpers/general";
+import { testResult, TestResultOutput } from "utils/testResult";
 import { isNoSuchKeyError } from "../utils";
 
 export default {
-  async toHaveS3ObjectWithNameEqualTo(bucketName: any, objectName: any) {
+  async toHaveS3ObjectWithNameEqualTo(
+    bucketName: string,
+    objectName: string
+  ): Promise<TestResultOutput> {
     const s3 = new AWSClient.S3();
     const params = {
       Bucket: bucketName,

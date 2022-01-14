@@ -4,6 +4,7 @@ import toHaveContentTypeEqualTo from "./toHaveContentTypeEqualTo";
 import toHaveEvent from "./toHaveEvent";
 import toHaveEventWithSource from "./toHaveEventWithSource";
 import toHaveObjectWithNameEqualTo from "./toHaveObjectWithNameEqualTo";
+import toExistInDynamoTable from "./toExistInDynamoTable";
 
 export default {
   ...toExistAsS3Bucket,
@@ -12,4 +13,5 @@ export default {
   ...toHaveEvent,
   ...toHaveEventWithSource,
   ...toHaveObjectWithNameEqualTo,
+  ...toExistInDynamoTable,
 };

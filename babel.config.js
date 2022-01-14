@@ -31,7 +31,8 @@ const plugins = [
   [
     "module-resolver",
     {
-      root: ["."],
+      root: ["./src"],
+      extensions: [".ts"],
     },
   ],
   "@babel/plugin-transform-runtime",

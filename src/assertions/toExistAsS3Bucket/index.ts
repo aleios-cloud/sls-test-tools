@@ -1,9 +1,9 @@
-import { AWSClient } from "../../helpers/general";
-import { testResult } from "../../utils/testResult";
+import { AWSClient } from "helpers/general";
+import { testResult, TestResultOutput } from "utils/testResult";
 import { is404Error } from "../utils";
 
 export default {
-  async toExistAsS3Bucket(bucketName: any) {
+  async toExistAsS3Bucket(bucketName: string): Promise<TestResultOutput> {
     const s3 = new AWSClient.S3();
     const params = {
       Bucket: bucketName,

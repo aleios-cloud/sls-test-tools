@@ -2,7 +2,7 @@
   "name": "sls-test-tools",
   "version": "1.0.3",
   "description": "Custom Jest Assertions for Serverless Projects",
-  "main": "lib/index.js",
+  "main": "lib/cjs/index.js",
   "module": "lib/esm/index.js",
   "types": "lib/types/index.d.ts",
   "directories": {
