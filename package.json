@@ -24,7 +24,7 @@
     "package:cjs": "NODE_ENV=cjs yarn transpile --out-dir lib/cjs --source-maps",
     "package:esm": "NODE_ENV=esm yarn transpile --out-dir lib/esm --source-maps",
     "package:types": "ttsc",
-    "transpile": "babel . --extensions .ts"
+    "transpile": "babel src --extensions .ts"
   },
   "dependencies": {
     "aws-sdk": "^2.711.0",
