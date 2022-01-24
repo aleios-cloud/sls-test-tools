@@ -1,17 +1,13 @@
-import { AWSClient } from "../../helpers/general";
+import { TestResultOutput } from "utils/testResult";
+import { AWSClient } from "helpers/general";
 
 export default {
-  async toExistInDynamoTable({ PK, SK }, tableName) {
+  async toExistInDynamoTable(
+    { PK, SK }: { PK: string; SK?: string },
+    tableName: string
+  ): Promise<TestResultOutput> {
     const docClient = new AWSClient.DynamoDB.DocumentClient();
-
-    if (!docClient) {
-      return {
-        message: () => "expected table to contain document client",
-        pass: false,
-      };
-    }
-
-    if (!SK) {
+    if (SK === undefined) {
       const queryParams = {
         TableName: tableName,
         KeyConditionExpression: "#pk = :pk",
@@ -19,18 +15,17 @@ export default {
           "#pk": "PK",
         },
         ExpressionAttributeValues: {
-          ":pk": PK,
+          ":pk": "PK",
         },
         Limit: 1,
       };
-
       const result = await docClient.query(queryParams).promise();
+
       return {
         message: () => `expected to find ${PK} in ${tableName}`,
         pass: result.Count === 1,
       };
     }
-
     const getParams = {
       TableName: tableName,
       Key: {
@@ -39,6 +34,7 @@ export default {
       },
     };
     const result = await docClient.get(getParams).promise();
+
     return {
       message: () => `expected to find ${PK} in ${tableName}`,
       pass: result.Item !== undefined,

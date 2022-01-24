@@ -2,7 +2,9 @@
   "name": "sls-test-tools",
   "version": "1.0.3",
   "description": "Custom Jest Assertions for Serverless Projects",
-  "main": "lib/index.js",
+  "main": "lib/cjs/index.js",
+  "module": "lib/esm/index.js",
+  "types": "lib/types/index.d.ts",
   "directories": {
     "lib": "lib"
   },
@@ -14,29 +16,44 @@
   "author": "Theodo UK",
   "license": "MIT",
   "scripts": {
-    "build": "babel ./src --out-dir lib",
-    "build-maps": "babel ./src --out-dir lib --source-maps",
-    "dev": "babel ./src --out-dir lib --watch",
+    "build": "rm -rf lib && yarn package:cjs && yarn package:esm && yarn package:types",
+    "dev": "rm -rf lib && concurrently 'yarn:package:* --watch'",
     "lint": "eslint ./src",
     "fix": "yarn lint --fix",
-    "release": "release-it"
+    "release": "release-it",
+    "package:cjs": "NODE_ENV=cjs yarn transpile --out-dir lib/cjs --source-maps",
+    "package:esm": "NODE_ENV=esm yarn transpile --out-dir lib/esm --source-maps",
+    "package:types": "ttsc",
+    "transpile": "babel src --extensions .ts"
   },
   "dependencies": {
     "aws-sdk": "^2.711.0",
     "import-all.macro": "^3.1.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.5.5",
-    "@babel/core": "^7.5.5",
-    "@babel/preset-env": "^7.5.5",
+    "@babel/cli": "^7.16.0",
+    "@babel/core": "^7.16.0",
+    "@babel/plugin-transform-runtime": "^7.16.0",
+    "@babel/preset-env": "^7.16.0",
+    "@babel/preset-typescript": "^7.16.0",
+    "@typescript-eslint/eslint-plugin": "^5.6.0",
+    "@typescript-eslint/parser": "^5.6.0",
+    "@zerollup/ts-transform-paths": "^1.7.18",
     "babel-plugin-macros": "^3.1.0",
-    "eslint": "^7.25.0",
+    "babel-plugin-module-resolver": "^4.1.0",
+    "concurrently": "^6.0.0",
+    "eslint": "^8.4.1",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-prettier": "^3.4.0",
+    "eslint-import-resolver-typescript": "^2.5.0",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-prettier": "^4.0.0",
     "prettier": "^2.2.1",
-    "release-it": "^14.6.1"
+    "release-it": "^14.6.1",
+    "ts-migrate": "^0.1.26",
+    "ts-node": "^10.4.0",
+    "ttypescript": "^1.5.12",
+    "typescript": "^4.5.2"
   },
   "babel": {
     "presets": [
