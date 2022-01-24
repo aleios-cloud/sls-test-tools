@@ -70,6 +70,14 @@ where CONTENT_TYPE are [standards MIME types](https://developer.mozilla.org/en-U
     }).toHaveContentEqualTo("CONTENT");
 ```
 
+### Step Functions
+
+Note: these assertions also require "await"
+
+```
+    await expect("STATE_MACHINE_NAME").toHaveCompletedExecutionWithStatus("STATUS");
+```
+
 ## Helpers
 
 ### General
