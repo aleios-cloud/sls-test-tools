@@ -1,8 +1,12 @@
-import { AWSClient } from "../../helpers/general";
-import { testResult } from "../../utils/testResult";
+import { AWSClient } from "helpers/general";
+import { testResult, TestResultOutput } from "utils/testResult";
+import { isNoSuchKeyError } from "../utils";
 
 export default {
-  async toHaveS3ObjectWithNameEqualTo(bucketName, objectName) {
+  async toHaveS3ObjectWithNameEqualTo(
+    bucketName: string,
+    objectName: string
+  ): Promise<TestResultOutput> {
     const s3 = new AWSClient.S3();
     const params = {
       Bucket: bucketName,
@@ -13,10 +17,12 @@ export default {
     try {
       await s3.getObject(params).promise();
       message = `expected ${bucketName} to have object with name ${objectName}`;
+
       return testResult(message, true);
     } catch (error) {
-      if (error.code === "NoSuchKey") {
+      if (isNoSuchKeyError(error)) {
         message = `expected ${bucketName} to have object with name ${objectName} - not found`;
+
         return testResult(message, false);
       }
       throw error;
