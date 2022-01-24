@@ -1,9 +1,12 @@
-import { testResult } from "../../utils/testResult";
+import { testResult, TestResultOutput } from "../../utils/testResult";
 
 const AWS = require("aws-sdk");
 
 export default {
-  async toHaveCompletedExecutionWithStatus(stateMachineName, expectedStatus) {
+  async toHaveCompletedExecutionWithStatus(
+    stateMachineName: string,
+    expectedStatus: string
+  ): Promise<TestResultOutput> {
     const stepFunctions = new AWS.StepFunctions();
     const listStateMachineParams = {};
     // Get all state machines
@@ -12,7 +15,7 @@ export default {
       .promise();
     // Find state machine with specified name and get its arn
     const smList = allStateMachines.stateMachines.filter(
-      (stateMachine) => stateMachine.name === stateMachineName
+      (stateMachine: any) => stateMachine.name === stateMachineName
     );
     const smArn = smList[0].stateMachineArn;
     const listExecutionsParams = { stateMachineArn: smArn };
