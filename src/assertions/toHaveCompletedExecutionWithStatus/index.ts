@@ -1,6 +1,6 @@
 import { testResult, TestResultOutput } from "../../utils/testResult";
 
-const AWS = require("aws-sdk");
+import * as AWS from "aws-sdk";
 
 export default {
   async toHaveCompletedExecutionWithStatus(
@@ -31,6 +31,7 @@ export default {
         true
       );
     }
+
     return testResult(
       `Execution status was ${latestExecution.status}, where it was expected to be ${expectedStatus}`,
       false
