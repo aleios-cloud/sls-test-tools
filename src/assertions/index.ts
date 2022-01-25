@@ -6,6 +6,7 @@ import toHaveEventWithSource from "./toHaveEventWithSource";
 import toHaveObjectWithNameEqualTo from "./toHaveObjectWithNameEqualTo";
 import toExistInDynamoTable from "./toExistInDynamoTable";
 import toHaveCompletedExecutionWithStatus from "./toHaveCompletedExecutionWithStatus";
+import toMatchStateMachineOutput from "./toMatchStateMachineOutput";
 
 export default {
   ...toExistAsS3Bucket,
@@ -15,5 +16,6 @@ export default {
   ...toHaveEventWithSource,
   ...toHaveObjectWithNameEqualTo,
   ...toExistInDynamoTable,
-  ...toHaveCompletedExecutionWithStatus
+  ...toHaveCompletedExecutionWithStatus,
+  ...toMatchStateMachineOutput,
 };
