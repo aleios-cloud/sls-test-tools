@@ -1,4 +1,5 @@
 import { StepFunctions as AWSStepFunctions } from "aws-sdk";
+import { String } from "aws-sdk/clients/apigateway";
 
 export default class StepFunctions {
   stepFunctions: AWSStepFunctions | undefined;
@@ -60,5 +61,29 @@ export default class StepFunctions {
     return await this.stepFunctions
       .describeExecution({ executionArn: execution.executionArn })
       .promise();
+  }
+
+  async obtainStateMachineArn(stateMachineName: string): Promise<String> {
+    
+    const listStateMachineParams = {};
+    // Get all state machines
+    if (this.stepFunctions === undefined) {
+      throw new Error(
+        "The Step Functions client is undefined. You might have forgotten to run build()."
+      );
+    }
+    const allStateMachines = await this.stepFunctions
+      .listStateMachines(listStateMachineParams)
+      .promise();
+    // Find state machine with specified name and get its arn
+    // changed filter to find- returns the first object that matches condition
+    const smList = allStateMachines.stateMachines.find(
+      (stateMachine: any) => stateMachine.name === stateMachineName
+    );
+    if (smList == null)
+    throw new Error(
+      "No matching state machine. "
+    );
+    return smList.stateMachineArn;
   }
 }
