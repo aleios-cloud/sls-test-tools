@@ -70,6 +70,14 @@ where CONTENT_TYPE are [standards MIME types](https://developer.mozilla.org/en-U
     }).toHaveContentEqualTo("CONTENT");
 ```
 
+### Step Functions
+
+Note: these assertions also require "await"
+
+```
+    await expect("STATE_MACHINE_NAME").toHaveCompletedExecutionWithStatus("STATUS");
+```
+
 ## Helpers
 
 ### General
@@ -98,6 +106,22 @@ An interface to the deployed EventBridge, allowing events to be injected and int
     eventBridge.getEvents() - get the events that have been sent to the bus
     eventBridge.clear() - clear old messages
     eventBridge.destroy() - remove infastructure used to track events
+```
+
+### Step Functions
+
+An interface to a deployed Step Function, with a function to execute a Step Function until its completion.
+
+#### Static
+
+```
+  StepFunctions.build() // create a Step Functions Client for executing existing state machines
+```
+
+#### Instance
+
+```
+  stepFunctions.runExecution(stateMachineName, input) // executes state machine until completion
 ```
 
 ## Running with `jest`
