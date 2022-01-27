@@ -1,4 +1,5 @@
 import { testResult, TestResultOutput } from "../../utils/testResult";
+import StepFunctions from "../../helpers/stepFunctions";
 
 import * as AWS from "aws-sdk";
 
@@ -8,16 +9,10 @@ export default {
     expectedStatus: string
   ): Promise<TestResultOutput> {
     const stepFunctions = new AWS.StepFunctions();
-    const listStateMachineParams = {};
-    // Get all state machines
-    const allStateMachines = await stepFunctions
-      .listStateMachines(listStateMachineParams)
-      .promise();
-    // Find state machine with specified name and get its arn
-    const smList = allStateMachines.stateMachines.filter(
-      (stateMachine: any) => stateMachine.name === stateMachineName
-    );
-    const smArn = smList[0].stateMachineArn;
+
+    const stepFunctionsObject =  await StepFunctions.build();
+    const smArn = await stepFunctionsObject.obtainStateMachineArn(stateMachineName); 
+    
     const listExecutionsParams = { stateMachineArn: smArn };
     // Get all executions of specified state machine
     const smExecutions = await stepFunctions

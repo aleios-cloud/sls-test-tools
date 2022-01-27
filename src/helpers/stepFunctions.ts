@@ -61,4 +61,27 @@ export default class StepFunctions {
       .describeExecution({ executionArn: execution.executionArn })
       .promise();
   }
+
+  async obtainStateMachineArn(stateMachineName: string): Promise<string> {
+    
+    const listStateMachineParams = {};
+    // Get all state machines
+    if (this.stepFunctions === undefined) {
+      throw new Error(
+        "The Step Functions client is undefined. You might have forgotten to run build()."
+      );
+    }
+    const allStateMachines = await this.stepFunctions
+      .listStateMachines(listStateMachineParams)
+      .promise();
+    // Find state machine with specified name and get its arn
+    const smList = allStateMachines.stateMachines.find(
+      (stateMachine: any) => stateMachine.name === stateMachineName
+    );
+    if (smList == null)
+    throw new Error(
+      "No matching state machine. "
+    );
+    return smList.stateMachineArn;
+  }
 }
