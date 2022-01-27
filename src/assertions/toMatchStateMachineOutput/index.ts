@@ -8,16 +8,15 @@ export default {
     expectedOutput: any
   ): Promise<TestResultOutput> {
     const stepFunctions = new AWSStepFunctions();
-    const stepFunctionsObject =  await StepFunctions.build();
-    const smArn = await stepFunctionsObject.obtainStateMachineArn(stateMachineName); 
-    const listExecParams = { stateMachineArn: smArn };
-    const executionList = await stepFunctions
-      .listExecutions(listExecParams)
-      .promise();
-
+    const stepFunctionObject = await StepFunctions.build();
+    // Helper to get stateMachine ARN from stateMachine name
+    const smArn = await stepFunctionObject.obtainStateMachineArn(stateMachineName); 
+    // Helper to get latest execution ARN for given stateMachine 
+    const exArn = await stepFunctionObject.obtainExecutionArn(smArn);
+    
     const executionResult = await stepFunctions
       .describeExecution({
-        executionArn: executionList.executions[0].executionArn,
+        executionArn: exArn
       })
       .promise();
 
