@@ -1,5 +1,6 @@
 import { testResult, TestResultOutput } from "utils/testResult";
 import { AWSClient } from "helpers/general";
+import { region } from "../../helpers/general";
 
 export default {
   async toContainItemWithValues(
@@ -7,13 +8,11 @@ export default {
     values: { [key: string]: unknown }
   ): Promise<TestResultOutput> {
     const docClient = new AWSClient.DynamoDB.DocumentClient({
-      region: "us-east-1",
+      region: region,
     });
-    let keys;
+    const keys: { pk: unknown; sk?: unknown } = { pk: values["PK"] };
     if (values["SK"] !== undefined) {
-      keys = { pk: values["PK"], sk: values["SK"] };
-    } else {
-      keys = { pk: values["PK"] };
+      keys.sk = values["SK"];
     }
     const queryParams = {
       Key: keys,
