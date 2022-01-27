@@ -23,15 +23,19 @@ export default {
       const result = await docClient.get(queryParams).promise();
       Object.entries(values).forEach(([key, val]) => {
         if (result.Item?.[key] !== val) {
-          return testResult("failed", false);
+          return testResult(
+            `Item was expected to have ${key} value of ${val}, but instead had ${key} value of ${result.Item?.[key]}`,
+            false
+          );
         }
       });
 
-      return testResult("passed", true);
+      return testResult("Item exists with expected values", true);
     } catch (e: any) {
       console.log(e);
+
+      return testResult("Item with specified keys does not exist.", false);
     }
 
-    return testResult("failed", false);
   },
 };
