@@ -1,5 +1,4 @@
 import { StepFunctions as AWSStepFunctions } from "aws-sdk";
-import { String } from "aws-sdk/clients/apigateway";
 
 export default class StepFunctions {
   stepFunctions: AWSStepFunctions | undefined;
@@ -63,7 +62,7 @@ export default class StepFunctions {
       .promise();
   }
 
-  async obtainStateMachineArn(stateMachineName: string): Promise<String> {
+  async obtainStateMachineArn(stateMachineName: string): Promise<string> {
     
     const listStateMachineParams = {};
     // Get all state machines
@@ -76,7 +75,6 @@ export default class StepFunctions {
       .listStateMachines(listStateMachineParams)
       .promise();
     // Find state machine with specified name and get its arn
-    // changed filter to find- returns the first object that matches condition
     const smList = allStateMachines.stateMachines.find(
       (stateMachine: any) => stateMachine.name === stateMachineName
     );
