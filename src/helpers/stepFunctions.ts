@@ -63,11 +63,7 @@ export default class StepFunctions {
   }
 
   async obtainExecutionArn(StateMachineArn: string): Promise<string> {
-    if (StateMachineArn == null) {
-      throw new Error(
-        "StateMachineArn is null. No matching state machine"
-      ); 
-    }
+  
     const listExecParams = { stateMachineArn: StateMachineArn };
     if (this.stepFunctions == null) {
       throw new Error(

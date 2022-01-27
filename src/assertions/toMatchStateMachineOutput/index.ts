@@ -1,26 +1,26 @@
-import * as AWS from "aws-sdk";
-import { testResult, TestResultOutput } from "../../utils/testResult";
-import StepFunctions from "../../helpers/stepFunctions";
+import { testResult, TestResultOutput } from "utils/testResult";
+import { StepFunctions as AWSStepFunctions } from "aws-sdk";
+import StepFunctions  from "helpers/stepFunctions";
 
 export default {
   async toMatchStateMachineOutput(
     stateMachineName: string,
     expectedOutput: any
   ): Promise<TestResultOutput> {
-    const stepFunctions = new AWS.StepFunctions();
+    const stepFunctions = new AWSStepFunctions();
     const allStateMachines = await stepFunctions.listStateMachines().promise();
 
     const smList = allStateMachines.stateMachines.filter(
       (stateMachine: any) => stateMachine.name === stateMachineName
     );
+
     const stateMachineArn = smList[0].stateMachineArn;
-    
-    const stepFunctionsObject =  await StepFunctions.build();
-    const executionArn = await stepFunctionsObject.obtainExecutionArn(stateMachineArn); 
+    const stepFunctionObject = await StepFunctions.build();
+    const executionArn = await stepFunctionObject.obtainExecutionArn(stateMachineArn);
 
     const executionResult = await stepFunctions
       .describeExecution({
-        executionArn: executionArn,
+        executionArn: executionArn
       })
       .promise();
 
