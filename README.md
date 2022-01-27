@@ -108,6 +108,22 @@ An interface to the deployed EventBridge, allowing events to be injected and int
     eventBridge.destroy() - remove infastructure used to track events
 ```
 
+### Step Functions
+
+An interface to a deployed Step Function, with a function to execute a Step Function until its completion.
+
+#### Static
+
+```
+  StepFunctions.build() // create a Step Functions Client for executing existing state machines
+```
+
+#### Instance
+
+```
+  stepFunctions.runExecution(stateMachineName, input) // executes state machine until completion
+```
+
 ## Running with `jest`
 
 ### Arguments

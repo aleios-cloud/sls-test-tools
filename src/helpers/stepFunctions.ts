@@ -19,10 +19,6 @@ export default class StepFunctions {
   }
 
   async runExecution(stateMachineName: string, input: any): Promise<any> {
-    // this.stepFunctions = new AWSStepFunctions();
-    // this.allStateMachines = await this.stepFunctions
-    //   .listStateMachines()
-    //   .promise();
     if (this.allStateMachines === undefined) {
       throw new Error(
         "The list of state machines is undefined. You might have forgotten to run build()."
@@ -50,6 +46,7 @@ export default class StepFunctions {
     const executionList = await this.stepFunctions
       .listExecutions(listExecParams)
       .promise();
+    // Poll until the given execution is no longer running
     while (
       executionList.executions.filter(
         (exec: any) =>
