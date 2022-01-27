@@ -25,12 +25,6 @@ export default {
       })
       .promise();
 
-    // if (allStateMachines === undefined) {
-    //     throw new Error(
-    //     "The list of state machines is undefined. You might have forgotten to run build()."
-    //     );
-    // }
-
     if (executionResult.status === "SUCCEEDED") {
       if (executionResult.output === expectedOutput) {
         return testResult(
