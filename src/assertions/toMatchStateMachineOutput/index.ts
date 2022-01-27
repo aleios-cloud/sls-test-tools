@@ -1,5 +1,6 @@
-import { testResult, TestResultOutput } from "utils/testResult";
+import { testResult, TestResultOutput } from "../../utils/testResult";
 import { StepFunctions as AWSStepFunctions } from "aws-sdk";
+import StepFunctions from "../../helpers/stepFunctions";
 
 export default {
   async toMatchStateMachineOutput(
@@ -7,21 +8,15 @@ export default {
     expectedOutput: any
   ): Promise<TestResultOutput> {
     const stepFunctions = new AWSStepFunctions();
-    const allStateMachines = await stepFunctions.listStateMachines().promise();
-
-    const smList = allStateMachines.stateMachines.filter(
-      (stateMachine: any) => stateMachine.name === stateMachineName
-    );
-
-    const stateMachineArn = smList[0].stateMachineArn;
-    const listExecParams = { stateMachineArn: stateMachineArn };
-    const executionList = await stepFunctions
-      .listExecutions(listExecParams)
-      .promise();
-
+    const stepFunctionObject = await StepFunctions.build();
+    // Helper to get stateMachine ARN from stateMachine name
+    const smArn = await stepFunctionObject.obtainStateMachineArn(stateMachineName); 
+    // Helper to get latest execution ARN for given stateMachine 
+    const exArn = await stepFunctionObject.obtainExecutionArn(smArn);
+    
     const executionResult = await stepFunctions
       .describeExecution({
-        executionArn: executionList.executions[0].executionArn,
+        executionArn: exArn
       })
       .promise();
 

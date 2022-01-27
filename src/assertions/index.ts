@@ -7,6 +7,7 @@ import toHaveObjectWithNameEqualTo from "./toHaveObjectWithNameEqualTo";
 import toExistInDynamoTable from "./toExistInDynamoTable";
 import toHaveCompletedExecutionWithStatus from "./toHaveCompletedExecutionWithStatus";
 import toContainItemWithValues from "./toContainItemWithValues";
+import toMatchStateMachineOutput from "./toMatchStateMachineOutput";
 
 export default {
   ...toExistAsS3Bucket,
@@ -18,4 +19,5 @@ export default {
   ...toExistInDynamoTable,
   ...toHaveCompletedExecutionWithStatus,
   ...toContainItemWithValues,
+  ...toMatchStateMachineOutput,
 };
