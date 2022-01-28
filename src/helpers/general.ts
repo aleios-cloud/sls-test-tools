@@ -1,14 +1,24 @@
 import AWS, { AWSError } from "aws-sdk";
 import { DescribeStacksOutput } from "aws-sdk/clients/cloudformation";
 import { PromiseResult } from "aws-sdk/lib/request";
+import { loadArg } from "./utils/loadArg";
 
-const profileArg = process.argv.filter((x) => x.startsWith("--profile="))[0];
-const profile = profileArg ? profileArg.split("=")[1] : "default";
-const stackArg = process.argv.filter((x) => x.startsWith("--stack="))[0];
-const regionArg = process.argv.filter((x) => x.startsWith("--region="))[0];
-export const region = regionArg ? regionArg.split("=")[1] : "eu-west-2";
+export const stackName = loadArg({
+  cliArg: "stack",
+  processEnvName: "CFN_STACK_NAME",
+});
 
-export const stackName = stackArg.split("=")[1];
+const profile = loadArg({
+  cliArg: "profile",
+  processEnvName: "AWS_PROFILE",
+  defaultValue: "default",
+});
+
+export const region = loadArg({
+  cliArg: "region",
+  processEnvName: "AWS_REGION",
+  defaultValue: "eu-west-2",
+});
 
 let creds;
 

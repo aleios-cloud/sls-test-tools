@@ -129,16 +129,16 @@ An interface to a deployed Step Function, with a function to execute a Step Func
 ### Arguments
 
 - When running tests with `jest` using `sls-test-tools` matchers there are certain parameters needed for `sls-test-tools` to make assertions.
-- These are passed as command line arguments, using quotation to match `jests` convention on test arguments.
+- These are passed either as command line arguments, using quotation to match `jests` convention on test arguments, or by using environment variables. CLI arguments override environment variables.
 
 **Required**
 
-- `'--stack=my-service-dev'` - the CloudFormation stack name of the stack under test.
+- `'--stack=my-service-dev'` or `process.env.CFN_STACK_NAME` - the CloudFormation stack name of the stack under test.
 
 **Optional**
 
-- `'--profile=[PROFILE NAME]'` (will default to `default`)
-- `'--region=[AWS Region]'` (will default to `eu-west-2`)
+- `'--profile=[PROFILE NAME]'` or `process.env.AWS_PROFILE` (will default to `default`)
+- `'--region=[AWS Region]'` or `process.env.AWS_REGION` (will default to `eu-west-2`)
 - `'--keep=true'` - keeps testing resources up to avoid creation throttles (e.g. SQS Queue created for EventBridge assertions)
 
 - To avoid issues we recommend `--runInBand`
