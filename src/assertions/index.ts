@@ -6,6 +6,7 @@ import toHaveEventWithSource from "./toHaveEventWithSource";
 import toHaveObjectWithNameEqualTo from "./toHaveObjectWithNameEqualTo";
 import toExistInDynamoTable from "./toExistInDynamoTable";
 import toHaveCompletedExecutionWithStatus from "./toHaveCompletedExecutionWithStatus";
+import toContainItemWithValues from "./toContainItemWithValues";
 import toMatchStateMachineOutput from "./toMatchStateMachineOutput";
 
 export default {
@@ -17,5 +18,6 @@ export default {
   ...toHaveObjectWithNameEqualTo,
   ...toExistInDynamoTable,
   ...toHaveCompletedExecutionWithStatus,
+  ...toContainItemWithValues,
   ...toMatchStateMachineOutput,
 };
