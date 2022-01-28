@@ -98,3 +98,19 @@ export const getOptions = async (): Promise<void | GetOptionsOutput> => {
     },
   };
 };
+
+export const pollOnCondition = (
+  condition: boolean,
+  timeoutValue: number
+): boolean => {
+  const start = Date.now();
+  while (!(Date.now() - start < timeoutValue)) {
+    if (condition) {
+      return true;
+    } else {
+      continue;
+    }
+  }
+
+  return false;
+};
