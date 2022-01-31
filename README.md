@@ -76,6 +76,18 @@ Note: these assertions also require "await"
 
 ```
     await expect("STATE_MACHINE_NAME").toHaveCompletedExecutionWithStatus("STATUS");
+    await expect("STATE_MACHINE_NAME").toMatchStateMachineOutput({EXPECTED_OUTPUT}));
+```
+
+### DynamoDB
+
+Note: these assertions also require "await"
+
+```
+    await expect("TABLENAME").toContainItemWithValues({[field]: value});
+    await expect({PK: pk,
+                  SK: sk,
+                }).toExistInDynamoTable('TABLENAME');
 ```
 
 ## Helpers
