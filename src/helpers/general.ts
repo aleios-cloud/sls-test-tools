@@ -98,18 +98,3 @@ export const getOptions = async (): Promise<void | GetOptionsOutput> => {
     },
   };
 };
-
-// make async? not necessary?
-export const pollOnCondition = (
-  condition: boolean,
-  timeoutValue: number
-): void => {
-  const start = Date.now();
-  while (!(Date.now() - start < timeoutValue)) {
-    if (condition) {
-      break;
-    } else {
-      continue;
-    }
-  }
-};
