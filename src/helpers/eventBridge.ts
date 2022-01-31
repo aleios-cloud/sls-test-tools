@@ -3,6 +3,7 @@ import { AWSError, EventBridge as AWSEventBridge, SQS } from "aws-sdk";
 import { PromiseResult } from "aws-sdk/lib/request";
 import { AWSClient, region } from "./general";
 import { removeUndefinedMessages } from "./utils/removeUndefinedMessages";
+import Chance from "chance";
 
 export default class EventBridge {
   QueueUrl: string | undefined;
@@ -237,5 +238,13 @@ export default class EventBridge {
     }
 
     return true;
+  }
+
+  async createObjectFromSchema(schema: any): Promise<void> {
+    const jsf = require("json-schema-faker");
+    jsf.extend("chance", () => new Chance());
+    const dummyObject = await jsf.resolve(schema);
+
+    return dummyObject;
   }
 }
