@@ -1,5 +1,4 @@
 import { StepFunctions as AWSStepFunctions } from "aws-sdk";
-import { pollOnCondition } from "./general";
 
 export default class StepFunctions {
   stepFunctions: AWSStepFunctions | undefined;
@@ -48,14 +47,15 @@ export default class StepFunctions {
       .listExecutions(listExecParams)
       .promise();
     // Poll until the given execution is no longer running
-    pollOnCondition(
+    while (
       executionList.executions.filter(
         (exec: any) =>
           exec.executionArn === execution.executionArn &&
           exec.status === "RUNNING"
-      ).length !== 0,
-      60000
-    );
+      ).length !== 0
+    ) {
+      continue;
+    }
 
     return await this.stepFunctions
       .describeExecution({ executionArn: execution.executionArn })
@@ -63,6 +63,7 @@ export default class StepFunctions {
   }
 
   async obtainStateMachineArn(stateMachineName: string): Promise<string> {
+    
     const listStateMachineParams = {};
     // Get all state machines
     if (this.stepFunctions == undefined) {
@@ -71,30 +72,34 @@ export default class StepFunctions {
       );
     }
     const allStateMachines = await this.stepFunctions
-      .listStateMachines(listStateMachineParams)
-      .promise();
-    // Find state machine with specified name and get its arn
-    const smList = allStateMachines.stateMachines.find(
-      (stateMachine: any) => stateMachine.name === stateMachineName
-    );
-    if (smList == null) throw new Error("No matching state machine. ");
-
-    return smList.stateMachineArn;
-  }
-
+    .listStateMachines(listStateMachineParams)
+    .promise();
+  // Find state machine with specified name and get its arn
+  const smList = allStateMachines.stateMachines.find(
+    (stateMachine: any) => stateMachine.name === stateMachineName
+  );
+  if (smList == null)
+  throw new Error(
+    "No matching state machine. "
+  );
+  return smList.stateMachineArn;
+}
+  
   async obtainExecutionArn(StateMachineArn: string): Promise<string> {
+  
     const listExecParams = { stateMachineArn: StateMachineArn };
     if (this.stepFunctions == null) {
       throw new Error(
         "The Step Functions client is undefined. You might have forgotten to run build()."
       );
     }
-
+    
     // Get all executions for this stateMachine
     const executionList = await this.stepFunctions
       .listExecutions(listExecParams)
       .promise();
 
-    return executionList.executions[0].executionArn;
+    return executionList.executions[0].executionArn
+    
   }
 }
