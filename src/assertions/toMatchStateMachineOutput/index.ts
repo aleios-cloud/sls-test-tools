@@ -10,13 +10,15 @@ export default {
     const stepFunctions = new AWSStepFunctions();
     const stepFunctionObject = await StepFunctions.build();
     // Helper to get stateMachine ARN from stateMachine name
-    const smArn = await stepFunctionObject.obtainStateMachineArn(stateMachineName); 
-    // Helper to get latest execution ARN for given stateMachine 
+    const smArn = await stepFunctionObject.obtainStateMachineArn(
+      stateMachineName
+    );
+    // Helper to get latest execution ARN for given stateMachine
     const exArn = await stepFunctionObject.obtainExecutionArn(smArn);
-    
+
     const executionResult = await stepFunctions
       .describeExecution({
-        executionArn: exArn
+        executionArn: exArn,
       })
       .promise();
 
