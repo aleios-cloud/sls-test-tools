@@ -36,45 +36,45 @@ sls-test-tools is currently being actively maintained, yet is in alpha. Your fee
 
 ### EventBridge
 
-```
-    expect(eventBridgeEvents).toHaveEvent();
+```ts
+expect(eventBridgeEvents).toHaveEvent();
 
-    expect(eventBridgeEvents).toHaveEventWithSource("order.created");
+expect(eventBridgeEvents).toHaveEventWithSource("order.created");
 ```
 
 ### S3
 
 Note: these async assertions require "await"
 
-```
-    await expect("BUCKET NAME").toHaveS3ObjectWithNameEqualTo("FILE NAME");
-```
-
-```
-    await expect("BUCKET NAME").toExistAsS3Bucket();
+```ts
+await expect("BUCKET NAME").toHaveS3ObjectWithNameEqualTo("FILE NAME");
 ```
 
+```ts
+await expect("BUCKET NAME").toExistAsS3Bucket();
 ```
-    await expect({
-      bucketName: "BUCKET_NAME",
-      objectName: "FILE NAME",
-    }).toHaveContentTypeEqualTo("CONTENT_TYPE");;
+
+```ts
+await expect({
+  bucketName: "BUCKET_NAME",
+  objectName: "FILE NAME",
+}).toHaveContentTypeEqualTo("CONTENT_TYPE");
 ```
 
 where CONTENT_TYPE are [standards MIME types](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types)
 
-```
-    await expect({
-      bucketName: "BUCKET_NAME",
-      objectName: "FILE NAME",
-    }).toHaveContentEqualTo("CONTENT");
+```ts
+await expect({
+  bucketName: "BUCKET_NAME",
+  objectName: "FILE NAME",
+}).toHaveContentEqualTo("CONTENT");
 ```
 
 ### Step Functions
 
 Note: these assertions also require "await"
 
-```
+```ts
     await expect("STATE_MACHINE_NAME").toHaveCompletedExecutionWithStatus("STATUS");
     await expect("STATE_MACHINE_NAME").toMatchStateMachineOutput({EXPECTED_OUTPUT}));
 ```
@@ -83,11 +83,9 @@ Note: these assertions also require "await"
 
 Note: these assertions also require "await"
 
-```
-    await expect("TABLENAME").toContainItemWithValues({[field]: value});
-    await expect({PK: pk,
-                  SK: sk,
-                }).toExistInDynamoTable('TABLENAME');
+```ts
+await expect("TABLENAME").toContainItemWithValues({ [field]: value });
+await expect({ PK: pk, SK: sk }).toExistInDynamoTable("TABLENAME");
 ```
 
 ### Cognito
@@ -104,9 +102,9 @@ Note: this assertion also requires "await"
 
 AWSClient - An AWS client with credentials set up
 
-```
-getStackResources(stackName) - get information about a stack
-getOptions() - get options for making requests to AWS
+```ts
+getStackResources(stackName); // get information about a stack
+getOptions(); // get options for making requests to AWS
 ```
 
 ### EventBridge
@@ -115,17 +113,18 @@ An interface to the deployed EventBridge, allowing events to be injected and int
 
 #### Static
 
-```
-    EventBridge.build(busName) - create a EventBridge instance to allow events to be injected and intercepted
+```ts
+EventBridge.build(busName); // create a EventBridge instance to allow events to be injected and intercepted
 ```
 
 #### Instance
 
-```
-    eventBridge.publishEvent(source, detailType, detail) - publish an event to the bus
-    eventBridge.getEvents() - get the events that have been sent to the bus
-    eventBridge.clear() - clear old messages
-    eventBridge.destroy() - remove infastructure used to track events
+```ts
+eventBridge.publishEvent(source, detailType, detail); // publish an event to the bus
+eventBridge.getEvent(); // get the last event that has been sent to the bus
+eventBridge.getAllEvents(); // get all the events that have been sent to the bus
+eventBridge.clear(); // clear old messages
+eventBridge.destroy(); // remove infastructure used to track events
 ```
 
 ### Step Functions
@@ -134,17 +133,25 @@ An interface to a deployed Step Function, with a function to execute a Step Func
 
 #### Static
 
-```
-  StepFunctions.build() // create a Step Functions Client for executing existing state machines
+```ts
+StepFunctions.build(); // create a Step Functions Client for executing existing state machines
 ```
 
 #### Instance
 
-```
-  stepFunctions.runExecution(stateMachineName, input) // executes state machine until completion
+```ts
+stepFunctions.runExecution(stateMachineName, input); // executes state machine until completion
 ```
 
 ## Running with `jest`
+
+### Setup
+
+We recommend that you differentiate your unit tests from your integration tests by using two distinct Jest configurations: `jest.config.json` and `jest.integration.config.json`. In particular, in the configuration file of the integration tests, it is imperative to exclude any mocked AWS services by using:
+
+```json
+modulePathIgnorePatterns: ["__mocks__"];
+```
 
 ### Arguments
 
@@ -165,7 +172,7 @@ An interface to a deployed Step Function, with a function to execute a Step Func
 
 - To avoid issues we recommend `--runInBand`
 
-```
+```ts
 import { AWSClient, EventBridge } from "sls-test-tools";
 
 const lambda = new AWSClient.Lambda()
@@ -195,7 +202,7 @@ describe("Integration Testing Event Bridge", () => {
     };
     await lambda.invoke(params).promise();
 
-    const eventBridgeEvents = await eventBridge.getEvents()
+    const eventBridgeEvents = await eventBridge.getEvent()
     expect(eventBridgeEvents).toHaveEvent();
     expect(eventBridgeEvents).toHaveEventWithSource("order.created");
   });

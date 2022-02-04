@@ -4,6 +4,12 @@ import { PromiseResult } from "aws-sdk/lib/request";
 import { AWSClient, region } from "./general";
 import { removeUndefinedMessages } from "./utils/removeUndefinedMessages";
 
+type EventBridgeMessage = { Body?: string };
+
+type EventBridgeEvents = {
+  Messages?: EventBridgeMessage[];
+};
+
 export default class EventBridge {
   QueueUrl: string | undefined;
   eventBridgeClient: AWSEventBridge | undefined;
@@ -129,12 +135,12 @@ export default class EventBridge {
       })
       .promise();
 
-    await this.getEvents(); // need to clear this manual published event from the SQS observer queue.
+    await this.getEvent(); // need to clear this manual published event from the SQS observer queue.
 
     return result;
   }
 
-  async getEvents(): Promise<SQS.ReceiveMessageResult | undefined> {
+  async getEvent(): Promise<SQS.ReceiveMessageResult | undefined> {
     if (this.QueueUrl === undefined) {
       throw new Error("QueueUrl is undefined");
     }
@@ -167,6 +173,30 @@ export default class EventBridge {
     }
 
     return result;
+  }
+
+  async getAllEvents(): Promise<EventBridgeEvents> {
+    let allEventsFound = false;
+    const allEventBridgeEvents: EventBridgeEvents = {};
+
+    while (!allEventsFound) {
+      try {
+        const lastEventBridgeEvents = await this.getEvent();
+
+        if (!lastEventBridgeEvents || !lastEventBridgeEvents.Messages) {
+          return allEventBridgeEvents;
+        }
+
+        allEventBridgeEvents.Messages = [
+          ...(allEventBridgeEvents.Messages ?? []),
+          ...lastEventBridgeEvents.Messages,
+        ];
+      } catch (e) {
+        allEventsFound = true;
+      }
+    }
+
+    return allEventBridgeEvents;
   }
 
   async clear(): Promise<any> {
