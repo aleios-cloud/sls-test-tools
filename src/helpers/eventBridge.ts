@@ -1,5 +1,10 @@
 /* eslint-disable max-lines */
-import { AWSError, EventBridge as AWSEventBridge, SQS } from "aws-sdk";
+import {
+  ConfigurationOptions as AWSConfig,
+  AWSError,
+  EventBridge as AWSEventBridge,
+  SQS,
+} from "aws-sdk";
 import { PromiseResult } from "aws-sdk/lib/request";
 import { AWSClient, region } from "./general";
 import { removeUndefinedMessages } from "./utils/removeUndefinedMessages";
@@ -13,15 +18,18 @@ export default class EventBridge {
   sqsClient: SQS | undefined;
   targetId: string | undefined;
 
-  async init(eventBridgeName: string): Promise<void> {
-    this.eventBridgeClient = new AWSClient.EventBridge();
+  async init(
+    eventBridgeName: string,
+    awsClientConfig?: AWSConfig
+  ): Promise<void> {
+    this.eventBridgeClient = new AWSClient.EventBridge(awsClientConfig);
     this.eventBridgeName = eventBridgeName;
     this.ruleName = `test-${eventBridgeName}-rule`;
     this.targetId = "1";
 
     const keepArg = process.argv.filter((x) => x.startsWith("--keep="))[0];
     this.keep = keepArg ? keepArg.split("=")[1] === "true" : false;
-    this.sqsClient = new AWSClient.SQS();
+    this.sqsClient = new AWSClient.SQS(awsClientConfig);
     if (!this.keep) {
       console.info(
         "If running repeatedly add '--keep=true' to keep testing resources up to avoid creation throttles"
@@ -91,9 +99,12 @@ export default class EventBridge {
       .promise();
   }
 
-  static async build(eventBridgeName: string): Promise<EventBridge> {
+  static async build(
+    eventBridgeName: string,
+    awsClientConfig?: AWSConfig
+  ): Promise<EventBridge> {
     const eventBridge = new EventBridge();
-    await eventBridge.init(eventBridgeName);
+    await eventBridge.init(eventBridgeName, awsClientConfig);
 
     return eventBridge;
   }

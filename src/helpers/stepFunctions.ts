@@ -1,19 +1,22 @@
-import { StepFunctions as AWSStepFunctions } from "aws-sdk";
+import {
+  ConfigurationOptions as AWSConfig,
+  StepFunctions as AWSStepFunctions,
+} from "aws-sdk";
 
 export default class StepFunctions {
   stepFunctions: AWSStepFunctions | undefined;
   allStateMachines: AWSStepFunctions.ListStateMachinesOutput | undefined;
 
-  async init(): Promise<void> {
-    this.stepFunctions = new AWSStepFunctions();
+  async init(awsClientConfig?: AWSConfig): Promise<void> {
+    this.stepFunctions = new AWSStepFunctions(awsClientConfig);
     this.allStateMachines = await this.stepFunctions
       .listStateMachines()
       .promise();
   }
 
-  static async build(): Promise<StepFunctions> {
+  static async build(awsClientConfig?: AWSConfig): Promise<StepFunctions> {
     const stepFunction = new StepFunctions();
-    await stepFunction.init();
+    await stepFunction.init(awsClientConfig);
 
     return stepFunction;
   }
