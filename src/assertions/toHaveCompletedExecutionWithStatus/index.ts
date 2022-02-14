@@ -8,11 +8,13 @@ export default {
     stateMachineName: string,
     expectedStatus: string
   ): Promise<TestResultOutput> {
-    const stepFunctions = new AWS.StepFunctions();
-    const stepFunctionsObject =  await StepFunctions.build();
+    const stepFunctions: AWS.StepFunctions = new AWS.StepFunctions();
+    const stepFunctionsObject = await StepFunctions.build();
     // Helper to get stateMachine ARN from stateMachine name
-    const smArn = await stepFunctionsObject.obtainStateMachineArn(stateMachineName); 
-    
+    const smArn = await stepFunctionsObject.obtainStateMachineArn(
+      stateMachineName
+    );
+
     const listExecutionsParams = { stateMachineArn: smArn };
     // Get all executions of specified state machine
     const smExecutions = await stepFunctions
