@@ -23,6 +23,7 @@ export default {
       Object.entries(values).forEach(([key, val]) => {
         if (result.Item?.[key] !== val) {
           return testResult(
+            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             `Item was expected to have ${key} value of ${val}, but instead had ${key} value of ${result.Item?.[key]}`,
             false
           );
