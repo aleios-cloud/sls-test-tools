@@ -8,12 +8,12 @@
   "directories": {
     "lib": "lib"
   },
-  "repository": "git@github.com:Theodo-UK/sls-test-tools.git",
+  "repository": "git@github.com:aleios-cloud/sls-test-tools.git",
   "bugs": {
-    "url": "https://github.com/Theodo-UK/sls-test-tools/issues"
+    "url": "https://github.com/aleios-cloud/sls-test-tools/issues"
   },
-  "homepage": "https://github.com/Theodo-UK/sls-test-tools#readme",
-  "author": "Theodo UK",
+  "homepage": "https://github.com/aleios-cloud/sls-test-tools#readme",
+  "author": "Aleios",
   "license": "MIT",
   "scripts": {
     "build": "rm -rf lib && yarn package:cjs && yarn package:esm && yarn package:types",

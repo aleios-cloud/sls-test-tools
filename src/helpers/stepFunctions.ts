@@ -1,11 +1,12 @@
 import { StepFunctions as AWSStepFunctions } from "aws-sdk";
+import { AWSClient } from "./general";
 
 export default class StepFunctions {
   stepFunctions: AWSStepFunctions | undefined;
   allStateMachines: AWSStepFunctions.ListStateMachinesOutput | undefined;
 
   async init(): Promise<void> {
-    this.stepFunctions = new AWSStepFunctions();
+    this.stepFunctions = new AWSClient.StepFunctions();
     this.allStateMachines = await this.stepFunctions
       .listStateMachines()
       .promise();

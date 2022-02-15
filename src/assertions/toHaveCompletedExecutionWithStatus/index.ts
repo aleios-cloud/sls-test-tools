@@ -1,14 +1,14 @@
 import { testResult, TestResultOutput } from "../../utils/testResult";
 import StepFunctions from "../../helpers/stepFunctions";
 
-import * as AWS from "aws-sdk";
+import { AWSClient } from "../../helpers/general";
 
 export default {
   async toHaveCompletedExecutionWithStatus(
     stateMachineName: string,
     expectedStatus: string
   ): Promise<TestResultOutput> {
-    const stepFunctions: AWS.StepFunctions = new AWS.StepFunctions();
+    const stepFunctions = new AWSClient.StepFunctions();
     const stepFunctionsObject = await StepFunctions.build();
     // Helper to get stateMachine ARN from stateMachine name
     const smArn = await stepFunctionsObject.obtainStateMachineArn(

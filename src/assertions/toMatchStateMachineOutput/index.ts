@@ -5,7 +5,7 @@ import StepFunctions from "../../helpers/stepFunctions";
 export default {
   async toMatchStateMachineOutput(
     stateMachineName: string,
-    expectedOutput: any
+    expectedOutput: unknown
   ): Promise<TestResultOutput> {
     const stepFunctions = new AWSStepFunctions();
     const stepFunctionObject = await StepFunctions.build();
