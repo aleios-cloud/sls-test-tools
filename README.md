@@ -152,6 +152,8 @@ An interface to a deployed Step Function, with a function to execute a Step Func
 - `'--profile=[PROFILE NAME]'` or `process.env.AWS_PROFILE` (will default to `default`)
 - `'--region=[AWS Region]'` or `process.env.AWS_REGION` (will default to `eu-west-2`)
 - `'--keep=true'` - keeps testing resources up to avoid creation throttles (e.g. SQS Queue created for EventBridge assertions)
+- `'--event-rule-name=[Event Bus Rule Name]'` - Custom Event bridge Rule name (will deafult to `test-${eventBridgeName}-rule`)
+- `'--queue-name=[SQS Queue Name]'` - Custom SQS Queue name (will deafult to `${eventBridgeName}-testing-queue`)
 
 - To avoid issues we recommend `--runInBand`
 
