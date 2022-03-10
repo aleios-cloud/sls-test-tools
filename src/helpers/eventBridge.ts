@@ -20,7 +20,9 @@ export default class EventBridge {
     this.targetId = "1";
 
     const keepArg = process.argv.filter((x) => x.startsWith("--keep="))[0];
-    this.keep = keepArg ? keepArg.split("=")[1] === "true" : false;
+    const keepArgEnabled = keepArg ? keepArg.split("=")[1] === "true" : false;
+    const keepEnvVarEnabled = !!process.env.SLS_TEST_TOOLS_KEEP;
+    this.keep = keepArgEnabled || keepEnvVarEnabled;
     this.sqsClient = new AWSClient.SQS();
     if (!this.keep) {
       console.info(
