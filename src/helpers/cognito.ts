@@ -27,13 +27,19 @@ const createUser = async (
   const cognitoClient: CognitoIdentityServiceProvider = new AWSClient.CognitoIdentityServiceProvider();
   const chance = new Chance();
   const password: string = chance.string({ length: 8 });
-  await cognitoClient
-    .signUp({
-      ClientId: clientId,
-      Username: username,
-      Password: password,
-    })
-    .promise();
+  try {
+    await cognitoClient
+      .signUp({
+        ClientId: clientId,
+        Username: username,
+        Password: password,
+      })
+      .promise();
+  } catch (e) {
+    console.error(
+      "Failed to create user user. Please make sure the clientId is correct, and that the username is valid."
+    );
+  }
 
   return {
     username,
@@ -44,12 +50,19 @@ const createUser = async (
 const confirmUser = async (input: ConfirmUserInput): Promise<User> => {
   const cognitoClient: CognitoIdentityServiceProvider = new AWSClient.CognitoIdentityServiceProvider();
 
-  await cognitoClient
-    .adminConfirmSignUp({
-      UserPoolId: input.userPoolId,
-      Username: input.username,
-    })
-    .promise();
+  try {
+    await cognitoClient
+      .adminConfirmSignUp({
+        UserPoolId: input.userPoolId,
+        Username: input.username,
+      })
+      .promise();
+  } catch (e) {
+    console.error(
+      "Failed to confirm sign up. Please make sure the user exists."
+    );
+    throw e;
+  }
 
   return {
     username: input.username,
@@ -95,21 +108,29 @@ export const createAuthenticatedUser = async (
     password: user.password,
   });
 
-  const auth: CognitoIdentityServiceProvider.InitiateAuthResponse = await cognitoClient
-    .initiateAuth({
-      AuthFlow: "USER_PASSWORD_AUTH",
-      ClientId: input.clientId,
-      AuthParameters: {
-        USERNAME: user.username,
-        PASSWORD: user.password,
-      },
-    })
-    .promise();
+  try {
+    const auth: CognitoIdentityServiceProvider.InitiateAuthResponse = await cognitoClient
+      .initiateAuth({
+        AuthFlow: "USER_PASSWORD_AUTH",
+        ClientId: input.clientId,
+        AuthParameters: {
+          USERNAME: user.username,
+          PASSWORD: user.password,
+        },
+      })
+      .promise();
 
-  return {
-    username,
-    password: user.password,
-    idToken: auth.AuthenticationResult?.IdToken,
-    accessToken: auth.AuthenticationResult?.AccessToken,
-  };
+    return {
+      username,
+      password: user.password,
+      idToken: auth.AuthenticationResult?.IdToken,
+      accessToken: auth.AuthenticationResult?.AccessToken,
+    };
+  } catch (e) {
+    console.error(
+      "Failed to authorize user - please make sure you're using the correct AuthFlow and that the user exists, and is confirmed."
+    );
+
+    throw e;
+  }
 };
