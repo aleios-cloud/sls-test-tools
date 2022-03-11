@@ -31,10 +31,9 @@ const createUser = async (
     .signUp({
       ClientId: clientId,
       Username: username,
-      Password: chance.string({ length: 8 }),
+      Password: password,
     })
     .promise();
-  console.log({ username, password });
 
   return {
     username,
@@ -51,8 +50,6 @@ const confirmUser = async (input: ConfirmUserInput): Promise<User> => {
       Username: input.username,
     })
     .promise();
-
-  console.log({ username: input.username, password: input.password });
 
   return {
     username: input.username,
@@ -91,7 +88,6 @@ export const createAuthenticatedUser = async (
   const username: string = chance.email();
 
   const user: User = await createUser(input.clientId, username);
-  console.log({ username });
 
   await confirmUser({
     userPoolId: input.userPoolId,
@@ -99,14 +95,12 @@ export const createAuthenticatedUser = async (
     password: user.password,
   });
 
-  console.log({ username: user.username, password: user.password });
-
-  const auth: CognitoIdentityServiceProvider.AdminInitiateAuthResponse = await cognitoClient
-    .adminInitiateAuth({
+  const auth: CognitoIdentityServiceProvider.InitiateAuthResponse = await cognitoClient
+    .initiateAuth({
       AuthFlow: "USER_PASSWORD_AUTH",
       ClientId: input.clientId,
       AuthParameters: {
-        USERNAME: username,
+        USERNAME: user.username,
         PASSWORD: user.password,
       },
     })
