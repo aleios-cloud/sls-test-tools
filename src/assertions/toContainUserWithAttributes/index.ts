@@ -43,7 +43,7 @@ export default {
             if (attributeObject.Name === key) {
               if (attributeObject.Value !== val) {
                 return testResult(
-                  "User does not exist in User Pool with specified fields.",
+                  `User's ${key} is expected to be ${val}, but is ${attributeObject.Value}.`,
                   false
                 );
               }
