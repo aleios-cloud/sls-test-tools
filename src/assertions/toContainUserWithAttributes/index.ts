@@ -3,7 +3,7 @@ import { CognitoIdentityServiceProvider } from "aws-sdk";
 import { testResult, TestResultOutput } from "utils/testResult";
 
 export interface UserWithAttributes {
-  username: string;
+  Username: string;
   address?: { [key: string]: unknown };
   birthdate?: string;
   email?: string;
@@ -33,7 +33,7 @@ export default {
       const user: CognitoIdentityServiceProvider.AdminGetUserResponse = await cognitoClient
         .adminGetUser({
           UserPoolId: userPoolId,
-          Username: userWithAttributes.username,
+          Username: userWithAttributes.Username,
         })
         .promise();
 
@@ -53,14 +53,14 @@ export default {
       });
 
       return testResult(
-        `User with username ${userWithAttributes.username} exists in User Pool with Id ${userPoolId}`,
+        `User with username ${userWithAttributes.Username} exists in User Pool with Id ${userPoolId}`,
         true
       );
     } catch (e) {
       console.log(e);
 
       return testResult(
-        `User does not exist in User Pool with Id ${userPoolId}`,
+        `User with username ${userWithAttributes.Username} does not exist in User Pool with Id ${userPoolId}`,
         false
       );
     }
