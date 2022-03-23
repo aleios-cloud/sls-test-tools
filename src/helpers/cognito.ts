@@ -2,14 +2,20 @@ import { CognitoIdentityServiceProvider } from "aws-sdk";
 import { AWSClient } from "./general";
 import { Chance } from "chance";
 import { AttributeType } from "aws-sdk/clients/cognitoidentityserviceprovider";
+<<<<<<< HEAD
 import jsf from "json-schema-faker";
+=======
+>>>>>>> 44df43d (Added helper to create user with standard attributes)
 
 interface User {
   username: string;
   password: string;
   confirmed?: boolean | undefined;
   standardAttributes?: StandardAttributes;
+<<<<<<< HEAD
   customAttributes?: { [attribute: string]: string };
+=======
+>>>>>>> 44df43d (Added helper to create user with standard attributes)
 }
 
 interface CreateUserInput {
@@ -17,7 +23,10 @@ interface CreateUserInput {
   userPoolId: string;
   confirmed: boolean;
   standardAttributes?: Array<keyof StandardAttributes>;
+<<<<<<< HEAD
   customAttributes?: { [key: string]: unknown };
+=======
+>>>>>>> 44df43d (Added helper to create user with standard attributes)
 }
 
 interface ConfirmUserInput {
@@ -88,7 +97,11 @@ const createUser = async (
     country: country,
   };
 
+<<<<<<< HEAD
   const allStandardAttributes: StandardAttributes = {
+=======
+  const allAttributes: StandardAttributes = {
+>>>>>>> 44df43d (Added helper to create user with standard attributes)
     email: chance.email(),
     birthdate: chance.date().toISOString().split("T")[0],
     family_name: familyName,
@@ -108,6 +121,7 @@ const createUser = async (
     updated_at: String(chance.timestamp()),
   };
 
+<<<<<<< HEAD
   const attributesArg: AttributeType[] = [];
   jsf.extend("chance", () => new Chance());
   if (createUserInput.customAttributes !== undefined) {
@@ -125,6 +139,20 @@ const createUser = async (
         Name: attribute,
         Value: allStandardAttributes[attribute],
       });
+=======
+  console.log(allAttributes.birthdate);
+
+  console.log(createUserInput.standardAttributes);
+
+  const attributes:
+    | Array<AttributeType>
+    | undefined = createUserInput.standardAttributes?.map(
+    (attribute: keyof StandardAttributes) => {
+      return {
+        Name: attribute,
+        Value: allAttributes[attribute],
+      };
+>>>>>>> 44df43d (Added helper to create user with standard attributes)
     }
   );
 
@@ -133,8 +161,14 @@ const createUser = async (
       ClientId: createUserInput.clientId,
       Username: username,
       Password: password,
+<<<<<<< HEAD
       UserAttributes: attributesArg,
     };
+=======
+      UserAttributes: attributes,
+    };
+    console.log(signUpParams);
+>>>>>>> 44df43d (Added helper to create user with standard attributes)
     await cognitoClient.signUp(signUpParams).promise();
   } catch (e) {
     console.log(e);
