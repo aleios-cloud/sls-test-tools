@@ -1,17 +1,20 @@
 import { CognitoIdentityServiceProvider } from "aws-sdk";
 import { AWSClient } from "./general";
 import { Chance } from "chance";
+import { AttributeType } from "aws-sdk/clients/cognitoidentityserviceprovider";
 
 interface User {
   username: string;
   password: string;
   confirmed?: boolean | undefined;
+  standardAttributes?: StandardAttributes;
 }
 
 interface CreateUserInput {
   clientId: string;
   userPoolId: string;
   confirmed: boolean;
+  standardAttributes?: Array<keyof StandardAttributes>;
 }
 
 interface ConfirmUserInput {
@@ -20,24 +23,115 @@ interface ConfirmUserInput {
   password: string;
 }
 
+interface Address {
+  formatted: string;
+  street_address: string;
+  locality: string;
+  region: string;
+  postal_code: string;
+  country: string;
+}
+
+interface StandardAttributes {
+  address: string;
+  birthdate: string;
+  email: string;
+  family_name: string;
+  gender: string;
+  given_name: string;
+  locale: string;
+  middle_name: string;
+  name: string;
+  nickname: string;
+  phone_number: string;
+  picture: string;
+  preferred_username: string;
+  profile: string;
+  updated_at: string;
+  website: string;
+  zoneinfo: string;
+}
+
 const createUser = async (
-  clientId: string,
+  createUserInput: CreateUserInput,
   username: string
 ): Promise<User> => {
   const cognitoClient: CognitoIdentityServiceProvider = new AWSClient.CognitoIdentityServiceProvider();
   const chance = new Chance();
   const password: string = chance.string({ length: 8 });
+
+  const givenName = chance.first();
+  const middleName = chance.first();
+  const familyName = chance.last();
+  const name = givenName + " " + middleName + " " + familyName;
+
+  const country = chance.country();
+  const streetAddress = chance.street();
+  const locality = chance.city();
+  const region = chance.province();
+  const postalCode = chance.postcode();
+
+  const formatted = [streetAddress, locality, region, postalCode, country].join(
+    "\r\n"
+  );
+
+  const address: Address = {
+    formatted: formatted,
+    street_address: streetAddress,
+    locality: locality,
+    region: region,
+    postal_code: postalCode,
+    country: country,
+  };
+
+  const allAttributes: StandardAttributes = {
+    email: chance.email(),
+    birthdate: chance.date().toISOString().split("T")[0],
+    family_name: familyName,
+    gender: chance.gender(),
+    given_name: givenName,
+    locale: chance.locale(),
+    middle_name: middleName,
+    name: name,
+    nickname: chance.string(),
+    phone_number: chance.phone(),
+    picture: chance.url(),
+    preferred_username: chance.string(),
+    profile: chance.url(),
+    website: chance.url(),
+    zoneinfo: chance.string(),
+    address: JSON.stringify(address),
+    updated_at: String(chance.timestamp()),
+  };
+
+  console.log(allAttributes.birthdate);
+
+  console.log(createUserInput.standardAttributes);
+
+  const attributes:
+    | Array<AttributeType>
+    | undefined = createUserInput.standardAttributes?.map(
+    (attribute: keyof StandardAttributes) => {
+      return {
+        Name: attribute,
+        Value: allAttributes[attribute],
+      };
+    }
+  );
+
   try {
-    await cognitoClient
-      .signUp({
-        ClientId: clientId,
-        Username: username,
-        Password: password,
-      })
-      .promise();
+    const signUpParams: CognitoIdentityServiceProvider.Types.SignUpRequest = {
+      ClientId: createUserInput.clientId,
+      Username: username,
+      Password: password,
+      UserAttributes: attributes,
+    };
+    console.log(signUpParams);
+    await cognitoClient.signUp(signUpParams).promise();
   } catch (e) {
+    console.log(e);
     console.error(
-      "Failed to create user user. Please make sure the clientId is correct, and that the username is valid."
+      "Failed to create user. Please make sure the clientId is correct, and that the username is valid."
     );
   }
 
@@ -76,7 +170,7 @@ export const createUnauthenticatedUser = async (
 ): Promise<User> => {
   const chance = new Chance();
   const username: string = chance.email();
-  const user: User = await createUser(input.clientId, username);
+  const user: User = await createUser(input, username);
 
   if (input.confirmed) {
     return await confirmUser({
@@ -100,7 +194,7 @@ export const createAuthenticatedUser = async (
   const chance = new Chance();
   const username: string = chance.email();
 
-  const user: User = await createUser(input.clientId, username);
+  const user: User = await createUser(input, username);
 
   await confirmUser({
     userPoolId: input.userPoolId,
