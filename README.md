@@ -90,6 +90,14 @@ Note: these assertions also require "await"
                 }).toExistInDynamoTable('TABLENAME');
 ```
 
+### Cognito
+
+Note: this assertion also requires "await"
+
+```
+  await expect(userPoolId).toContainUser(username);
+```
+
 ## Helpers
 
 ### General
