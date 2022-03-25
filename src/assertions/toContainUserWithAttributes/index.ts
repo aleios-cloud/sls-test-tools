@@ -37,7 +37,20 @@ export default {
         })
         .promise();
 
-      console.log(user);
+      Object.entries(userWithAttributes).forEach(([key, val]) => {
+        if (key !== "Username") {
+          user.UserAttributes?.forEach((attributeObject) => {
+            if (attributeObject.Name === key) {
+              if (attributeObject.Value !== val) {
+                return testResult(
+                  "User does not exist in User Pool with specified fields.",
+                  false
+                );
+              }
+            }
+          });
+        }
+      });
 
       return testResult(
         `User with username ${userWithAttributes.username} exists in User Pool with Id ${userPoolId}`,
