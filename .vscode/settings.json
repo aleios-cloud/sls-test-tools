@@ -4,4 +4,8 @@
       "source.fixAll.eslint": true
     },
   "eslint.validate": ["javascript"]
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 9ccb221 (merging in latest main)
