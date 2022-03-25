@@ -28,33 +28,39 @@ export default {
     userPoolId: string,
     userWithAttributes: UserWithAttributes
   ): Promise<TestResultOutput> {
-    const cognitoClient: CognitoIdentityServiceProvider = new AWSClient.CognitoIdentityServiceProvider();
+    const cognitoClient: CognitoIdentityServiceProvider =
+      new AWSClient.CognitoIdentityServiceProvider();
     try {
-      const user: CognitoIdentityServiceProvider.AdminGetUserResponse = await cognitoClient
-        .adminGetUser({
-          UserPoolId: userPoolId,
-          Username: userWithAttributes.Username,
-        })
-        .promise();
-
+      const user: CognitoIdentityServiceProvider.AdminGetUserResponse =
+        await cognitoClient
+          .adminGetUser({
+            UserPoolId: userPoolId,
+            Username: userWithAttributes.Username,
+          })
+          .promise();
+      let allMatched = true;
       Object.entries(userWithAttributes).forEach(([key, val]) => {
         if (key !== "Username") {
           user.UserAttributes?.forEach((attributeObject) => {
             if (attributeObject.Name === key) {
               if (attributeObject.Value !== val) {
-                return testResult(
-                  `User's ${key} is expected to be ${val}, but is ${attributeObject.Value}.`,
-                  false
-                );
+                allMatched = false;
               }
             }
           });
         }
       });
 
+      if (allMatched) {
+        return testResult(
+          `User with username ${userWithAttributes.Username} exists in User Pool with Id ${userPoolId}`,
+          true
+        );
+      }
+
       return testResult(
-        `User with username ${userWithAttributes.Username} exists in User Pool with Id ${userPoolId}`,
-        true
+        `User with username ${userWithAttributes.Username} has attributes which are not as expected.`,
+        false
       );
     } catch (e) {
       console.log(e);
