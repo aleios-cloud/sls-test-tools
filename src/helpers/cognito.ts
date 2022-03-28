@@ -56,7 +56,8 @@ const createUser = async (
   createUserInput: CreateUserInput,
   username: string
 ): Promise<User> => {
-  const cognitoClient: CognitoIdentityServiceProvider = new AWSClient.CognitoIdentityServiceProvider();
+  const cognitoClient: CognitoIdentityServiceProvider =
+    new AWSClient.CognitoIdentityServiceProvider();
   const chance = new Chance();
   const password: string = chance.string({ length: 8 });
 
@@ -108,16 +109,15 @@ const createUser = async (
 
   console.log(createUserInput.standardAttributes);
 
-  const attributes:
-    | Array<AttributeType>
-    | undefined = createUserInput.standardAttributes?.map(
-    (attribute: keyof StandardAttributes) => {
-      return {
-        Name: attribute,
-        Value: allAttributes[attribute],
-      };
-    }
-  );
+  const attributes: Array<AttributeType> | undefined =
+    createUserInput.standardAttributes?.map(
+      (attribute: keyof StandardAttributes) => {
+        return {
+          Name: attribute,
+          Value: allAttributes[attribute],
+        };
+      }
+    );
 
   try {
     const signUpParams: CognitoIdentityServiceProvider.Types.SignUpRequest = {
@@ -142,7 +142,8 @@ const createUser = async (
 };
 
 const confirmUser = async (input: ConfirmUserInput): Promise<User> => {
-  const cognitoClient: CognitoIdentityServiceProvider = new AWSClient.CognitoIdentityServiceProvider();
+  const cognitoClient: CognitoIdentityServiceProvider =
+    new AWSClient.CognitoIdentityServiceProvider();
 
   try {
     await cognitoClient
@@ -190,7 +191,8 @@ export const createUnauthenticatedUser = async (
 export const createAuthenticatedUser = async (
   input: CreateUserInput
 ): Promise<CognitoIdentityServiceProvider.AdminConfirmSignUpResponse> => {
-  const cognitoClient: CognitoIdentityServiceProvider = new AWSClient.CognitoIdentityServiceProvider();
+  const cognitoClient: CognitoIdentityServiceProvider =
+    new AWSClient.CognitoIdentityServiceProvider();
   const chance = new Chance();
   const username: string = chance.email();
 
@@ -203,16 +205,17 @@ export const createAuthenticatedUser = async (
   });
 
   try {
-    const auth: CognitoIdentityServiceProvider.InitiateAuthResponse = await cognitoClient
-      .initiateAuth({
-        AuthFlow: "USER_PASSWORD_AUTH",
-        ClientId: input.clientId,
-        AuthParameters: {
-          USERNAME: user.username,
-          PASSWORD: user.password,
-        },
-      })
-      .promise();
+    const auth: CognitoIdentityServiceProvider.InitiateAuthResponse =
+      await cognitoClient
+        .initiateAuth({
+          AuthFlow: "USER_PASSWORD_AUTH",
+          ClientId: input.clientId,
+          AuthParameters: {
+            USERNAME: user.username,
+            PASSWORD: user.password,
+          },
+        })
+        .promise();
 
     return {
       username,

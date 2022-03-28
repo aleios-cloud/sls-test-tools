@@ -144,6 +144,23 @@ An interface to a deployed Step Function, with a function to execute a Step Func
   stepFunctions.runExecution(stateMachineName, input) // executes state machine until completion
 ```
 
+### Cognito
+
+```
+  await createAuthenticatedUser({
+    clientId: "CLIENT_ID",
+    userPoolId: "USER_POOL_ID",
+    standardAttributes: ["email", "middle_name"], // works for all cognito standard user attributes
+  });
+
+  await createUnauthenticatedUser({
+    clientId: "CLIENT_ID",
+    userPoolId: "USER_POOL_ID",
+    confirmed: true,
+    standardAttributes: ["email", "middle_name", "address", "birthdate"],  // works for all cognito standard user attributes
+  });
+```
+
 ## Running with `jest`
 
 ### Arguments
