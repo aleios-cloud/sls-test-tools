@@ -92,11 +92,15 @@ Note: these assertions also require "await"
 
 ### Cognito
 
-Note: this assertion also requires "await"
+Note: these assertions also require "await"
 
-```
+````
   await expect('USER_POOL_ID').toContainUser('USERNAME');
-```
+  await expect('USER_POOL_ID').toContainUserWithAttributes({
+    Username: 'USERNAME',
+    email: 'EMAIL@EMAIL.EMAIL',
+    // and so on for all cognito user standard attributes
+  });```
 
 ## Helpers
 
@@ -104,9 +108,11 @@ Note: this assertion also requires "await"
 
 AWSClient - An AWS client with credentials set up
 
-```
+````
+
 getStackResources(stackName) - get information about a stack
 getOptions() - get options for making requests to AWS
+
 ```
 
 ### EventBridge
@@ -116,16 +122,20 @@ An interface to the deployed EventBridge, allowing events to be injected and int
 #### Static
 
 ```
+
     EventBridge.build(busName) - create a EventBridge instance to allow events to be injected and intercepted
+
 ```
 
 #### Instance
 
 ```
+
     eventBridge.publishEvent(source, detailType, detail) - publish an event to the bus
     eventBridge.getEvents() - get the events that have been sent to the bus
     eventBridge.clear() - clear old messages
     eventBridge.destroy() - remove infastructure used to track events
+
 ```
 
 ### Step Functions
@@ -135,13 +145,17 @@ An interface to a deployed Step Function, with a function to execute a Step Func
 #### Static
 
 ```
-  StepFunctions.build() // create a Step Functions Client for executing existing state machines
+
+StepFunctions.build() // create a Step Functions Client for executing existing state machines
+
 ```
 
 #### Instance
 
 ```
-  stepFunctions.runExecution(stateMachineName, input) // executes state machine until completion
+
+stepFunctions.runExecution(stateMachineName, input) // executes state machine until completion
+
 ```
 
 ### Cognito
@@ -446,6 +460,7 @@ An interface to a deployed Step Function, with a function to execute a Step Func
 - To avoid issues we recommend `--runInBand`
 
 ```
+
 import { AWSClient, EventBridge } from "sls-test-tools";
 
 const lambda = new AWSClient.Lambda()
@@ -453,20 +468,20 @@ let eventBridge;
 const s3 = new AWSClient.S3()
 
 describe("Integration Testing Event Bridge", () => {
-  beforeAll(async () => {
-    eventBridge = await EventBridge.build("event-bridge")
-  });
+beforeAll(async () => {
+eventBridge = await EventBridge.build("event-bridge")
+});
 
-  afterAll(async () => {
-    await eventBridge.destroy()
-  });
+afterAll(async () => {
+await eventBridge.destroy()
+});
 
-  it("correctly publishes an event to the event bus when the lambda is invoked", async () => {
-    const event = {
-      body: JSON.stringify({
-        filename: filename,
-      }),
-    };
+it("correctly publishes an event to the event bus when the lambda is invoked", async () => {
+const event = {
+body: JSON.stringify({
+filename: filename,
+}),
+};
 
     // Invoke Lambda Function
     const params = {
@@ -478,12 +493,13 @@ describe("Integration Testing Event Bridge", () => {
     const eventBridgeEvents = await eventBridge.getEvents()
     expect(eventBridgeEvents).toHaveEvent();
     expect(eventBridgeEvents).toHaveEventWithSource("order.created");
-  });
 
-  it("correctly generates a PDF when an order is created", async () => {
-    const bucketName = example-bucket
-    await eventBridge
-      .publishEvent("order.created", "example", JSON.stringify({ filename: filename }));
+});
+
+it("correctly generates a PDF when an order is created", async () => {
+const bucketName = example-bucket
+await eventBridge
+.publishEvent("order.created", "example", JSON.stringify({ filename: filename }));
 
     await sleep(5000); // wait 5 seconds to allow event to pass
 
@@ -496,7 +512,9 @@ describe("Integration Testing Event Bridge", () => {
     await expect("example-dev-thumbnails-bucket").toHaveS3ObjectWithNameEqualTo(
       filename
     );
-  });
+
+});
+
 ```
 
 ## Contributors ✨
@@ -520,3 +538,4 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+```
