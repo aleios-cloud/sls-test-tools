@@ -95,7 +95,7 @@ Note: these assertions also require "await"
 Note: this assertion also requires "await"
 
 ```
-  await expect(userPoolId).toContainUser(username);
+  await expect('USER_POOL_ID').toContainUser('USERNAME');
 ```
 
 ## Helpers
