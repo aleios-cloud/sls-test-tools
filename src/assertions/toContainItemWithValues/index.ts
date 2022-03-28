@@ -18,19 +18,32 @@ export default {
       Key: keys,
       TableName: tableName,
     };
+    let allMatched = true;
+    let itemExists = true;
     try {
       const result = await docClient.get(queryParams).promise();
       Object.entries(values).forEach(([key, val]) => {
-        if (result.Item?.[key] !== val) {
-          return testResult(
-            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-            `Item was expected to have ${key} value of ${val}, but instead had ${key} value of ${result.Item?.[key]}`,
-            false
-          );
+        if (result.Item !== undefined) {
+          if (key in result.Item) {
+            if (result.Item[key] !== val) {
+              allMatched = false;
+            }
+          }
+        } else {
+          itemExists = false;
         }
       });
-
-      return testResult("Item exists with expected values", true);
+      if (!itemExists) {
+        return testResult(`Item does not exist.`, false);
+      } else if (!allMatched) {
+        return testResult(
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+          `Some values do not match as expected.`,
+          false
+        );
+      } else {
+        return testResult("Item exists with expected values", true);
+      }
     } catch (e: any) {
       console.log(e);
 
