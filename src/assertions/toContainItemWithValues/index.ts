@@ -36,11 +36,7 @@ export default {
       if (!itemExists) {
         return testResult(`Item does not exist.`, false);
       } else if (!allMatched) {
-        return testResult(
-          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-          `Some values do not match as expected.`,
-          false
-        );
+        return testResult(`Some values do not match as expected.`, false);
       } else {
         return testResult("Item exists with expected values", true);
       }
