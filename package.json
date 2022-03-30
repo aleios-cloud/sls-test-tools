@@ -31,6 +31,7 @@
     "aws-sdk": "^2.711.0",
     "chance": "^1.1.8",
     "import-all.macro": "^3.1.0",
+    "json-schema-faker": "^0.5.0-rcv.42",
     "yargs": "^17.3.1"
   },
   "devDependencies": {
