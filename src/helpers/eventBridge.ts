@@ -23,13 +23,18 @@ export default class EventBridge {
     const keepArgEnabled = keepArg ? keepArg.split("=")[1] === "true" : false;
     const keepEnvVarEnabled = !!process.env.SLS_TEST_TOOLS_KEEP;
     this.keep = keepArgEnabled || keepEnvVarEnabled;
+    const ruleNameArg = process.argv.filter((x) => x.startsWith("--event-rule-name="))[0];
+    this.ruleName = ruleNameArg ? ruleNameArg.split("=")[1] : `test-${eventBridgeName}-rule`;
+    const queueNameArg = process.argv.filter((x) => x.startsWith("--queue-name="))[0];
+    const queueName = queueNameArg ? queueNameArg.split("=")[1] : `${eventBridgeName}-testing-queue`;
+    
     this.sqsClient = new AWSClient.SQS();
     if (!this.keep) {
       console.info(
         "If running repeatedly add '--keep=true' to keep testing resources up to avoid creation throttles"
       );
     }
-    const queueName = `${eventBridgeName}-testing-queue`;
+  
     const queueResult = await this.sqsClient
       .createQueue({
         QueueName: queueName,

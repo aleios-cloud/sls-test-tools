@@ -30,6 +30,7 @@ declare global {
       toHaveEvent(): R;
       toHaveEventWithSource(expectedSourceName: string): R;
       toHaveS3ObjectWithNameEqualTo(objectName: string): Promise<R>;
+      toContainItemWithValues(values:{ [key: string]: unknown }): Promise<R>;
     }
   }
 }
