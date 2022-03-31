@@ -20,7 +20,9 @@ export default class EventBridge {
     this.targetId = "1";
 
     const keepArg = process.argv.filter((x) => x.startsWith("--keep="))[0];
-    this.keep = keepArg ? keepArg.split("=")[1] === "true" : false;
+    const keepArgEnabled = keepArg ? keepArg.split("=")[1] === "true" : false;
+    const keepEnvVarEnabled = !!process.env.SLS_TEST_TOOLS_KEEP;
+    this.keep = keepArgEnabled || keepEnvVarEnabled;
     const ruleNameArg = process.argv.filter((x) => x.startsWith("--event-rule-name="))[0];
     this.ruleName = ruleNameArg ? ruleNameArg.split("=")[1] : `test-${eventBridgeName}-rule`;
     const queueNameArg = process.argv.filter((x) => x.startsWith("--queue-name="))[0];
