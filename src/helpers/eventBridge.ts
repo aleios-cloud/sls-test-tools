@@ -7,7 +7,7 @@ import { removeUndefinedMessages } from "./utils/removeUndefinedMessages";
 type EventBridgeMessage = { Body?: string };
 
 type EventBridgeEvents = {
-  Messages?: EventBridgeMessage[];
+  Messages: EventBridgeMessage[];
 };
 
 export default class EventBridge {
@@ -177,20 +177,19 @@ export default class EventBridge {
 
   async getAllEvents(): Promise<EventBridgeEvents> {
     let allEventsFound = false;
-    const allEventBridgeEvents: EventBridgeEvents = {};
+    // initialise allEventBridgeEvents at the start of the function
+    const allEventBridgeEvents: EventBridgeEvents = { Messages: [] };
 
     while (!allEventsFound) {
       try {
         const lastEventBridgeEvent = await this.getLastEvent();
 
-        if (!lastEventBridgeEvents || !lastEventBridgeEvents.Messages) {
-          return allEventBridgeEvents;
+        if (!lastEventBridgeEvent || !lastEventBridgeEvent.Messages) {
+          allEventsFound = true;
+          break;
         }
 
-        allEventBridgeEvents.Messages = [
-          ...(allEventBridgeEvents.Messages ?? []),
-          ...lastEventBridgeEvents.Messages,
-        ];
+        allEventBridgeEvents.Messages.push(...lastEventBridgeEvent.Messages);
       } catch (e) {
         allEventsFound = true;
       }
