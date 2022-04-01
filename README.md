@@ -121,7 +121,7 @@ EventBridge.build(busName); // create a EventBridge instance to allow events to 
 
 ```ts
 eventBridge.publishEvent(source, detailType, detail); // publish an event to the bus
-eventBridge.getEvent(); // get the last event that has been sent to the bus
+eventBridge.getLastEvent(); // get the last event that has been sent to the bus
 eventBridge.getAllEvents(); // get all the events that have been sent to the bus
 eventBridge.clear(); // clear old messages
 eventBridge.destroy(); // remove infastructure used to track events
@@ -202,7 +202,7 @@ describe("Integration Testing Event Bridge", () => {
     };
     await lambda.invoke(params).promise();
 
-    const eventBridgeEvents = await eventBridge.getEvent()
+    const eventBridgeEvents = await eventBridge.getLastEvent()
     expect(eventBridgeEvents).toHaveEvent();
     expect(eventBridgeEvents).toHaveEventWithSource("order.created");
   });

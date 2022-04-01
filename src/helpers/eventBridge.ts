@@ -135,12 +135,12 @@ export default class EventBridge {
       })
       .promise();
 
-    await this.getEvent(); // need to clear this manual published event from the SQS observer queue.
+    await this.getLastEvent(); // need to clear this manual published event from the SQS observer queue.
 
     return result;
   }
 
-  async getEvent(): Promise<SQS.ReceiveMessageResult | undefined> {
+  async getLastEvent(): Promise<SQS.ReceiveMessageResult | undefined> {
     if (this.QueueUrl === undefined) {
       throw new Error("QueueUrl is undefined");
     }
@@ -181,7 +181,7 @@ export default class EventBridge {
 
     while (!allEventsFound) {
       try {
-        const lastEventBridgeEvents = await this.getEvent();
+        const lastEventBridgeEvent = await this.getLastEvent();
 
         if (!lastEventBridgeEvents || !lastEventBridgeEvents.Messages) {
           return allEventBridgeEvents;
