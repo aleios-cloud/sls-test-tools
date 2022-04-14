@@ -42,11 +42,10 @@ export default class StepFunctions {
         "The Step Functions client is undefined. You might have forgotten to run build()."
       );
     }
-    const execution: AWSStepFunctions.StartExecutionOutput = await this.stepFunctions
-      .startExecution(executionParams)
-      .promise();
+    const execution: AWSStepFunctions.StartExecutionOutput =
+      await this.stepFunctions.startExecution(executionParams).promise();
     const listExecParams = { stateMachineArn: stateMachineArn };
-    const executionList = await this.stepFunctions
+    let executionList = await this.stepFunctions
       .listExecutions(listExecParams)
       .promise();
     // Poll until the given execution is no longer running
@@ -57,7 +56,9 @@ export default class StepFunctions {
           exec.status === "RUNNING"
       ).length !== 0
     ) {
-      continue;
+      executionList = await this.stepFunctions
+        .listExecutions(listExecParams)
+        .promise();
     }
 
     return await this.stepFunctions
