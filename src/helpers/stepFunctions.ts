@@ -1,6 +1,8 @@
 import { StepFunctions as AWSStepFunctions } from "aws-sdk";
 import { AWSClient } from "./general";
 
+const API_POLLING_DELAY_MS = 1000;
+
 export default class StepFunctions {
   stepFunctions: AWSStepFunctions | undefined;
   allStateMachines: AWSStepFunctions.ListStateMachinesOutput | undefined;
@@ -59,6 +61,9 @@ export default class StepFunctions {
       executionList = await this.stepFunctions
         .listExecutions(listExecParams)
         .promise();
+
+      // Wait before retrying to avoid throttle limits
+      await new Promise((resolve) => setTimeout(resolve, API_POLLING_DELAY_MS));
     }
 
     return await this.stepFunctions
