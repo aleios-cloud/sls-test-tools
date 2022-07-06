@@ -1598,6 +1598,14 @@
   dependencies:
     "@types/istanbul-lib-report" "*"
 
+"@types/jest@^28.1.4":
+  version "28.1.4"
+  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-28.1.4.tgz#a11ee6c8fd0b52c19c9c18138b78bbcc201dad5a"
+  integrity sha512-telv6G5N7zRJiLcI3Rs3o+ipZ28EnE+7EvF0pSrt2pZOMnAVI/f+6/LucDxOvcBcTeTL3JMF744BbVQAVBUQRA==
+  dependencies:
+    jest-matcher-utils "^28.0.0"
+    pretty-format "^28.0.0"
+
 "@types/json-schema@^7.0.9":
   version "7.0.11"
   resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.11.tgz#d421b6c527a3037f7c84433fd2c4229e016863d3"
@@ -4519,7 +4527,7 @@ jest-leak-detector@^28.1.1:
     jest-get-type "^28.0.2"
     pretty-format "^28.1.1"
 
-jest-matcher-utils@^28.1.1:
+jest-matcher-utils@^28.0.0, jest-matcher-utils@^28.1.1:
   version "28.1.1"
   resolved "https://registry.yarnpkg.com/jest-matcher-utils/-/jest-matcher-utils-28.1.1.tgz#a7c4653c2b782ec96796eb3088060720f1e29304"
   integrity sha512-NPJPRWrbmR2nAJ+1nmnfcKKzSwgfaciCCrYZzVnNoxVoyusYWIjkBMNvu0RHJe7dNj4hH3uZOPZsQA+xAYWqsw==
@@ -5692,7 +5700,7 @@ prettier@^2.2.1:
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.7.1.tgz#e235806850d057f97bb08368a4f7d899f7760c64"
   integrity sha512-ujppO+MkdPqoVINuDFDRLClm7D78qbDt0/NR+wp5FqEZOoTNAjPHWj17QRhu7geIHJfcNhRk1XVQmF8Bp3ye+g==
 
-pretty-format@^28.1.1:
+pretty-format@^28.0.0, pretty-format@^28.1.1:
   version "28.1.1"
   resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-28.1.1.tgz#f731530394e0f7fcd95aba6b43c50e02d86b95cb"
   integrity sha512-wwJbVTGFHeucr5Jw2bQ9P+VYHyLdAqedFLEkdQUVaBF/eiidDwH5OpilINq4mEfhbCjLnirt6HTTDhv1HaTIQw==
@@ -5982,7 +5990,7 @@ regjsparser@^0.8.2:
   dependencies:
     jsesc "~0.5.0"
 
-release-it@^14.12.5:
+release-it@^14.12.4:
   version "14.14.3"
   resolved "https://registry.yarnpkg.com/release-it/-/release-it-14.14.3.tgz#f398030bc07d91bf3616b680dcb4140e1023dd9c"
   integrity sha512-CU3ySDOzkcdpaJmzKG7QXhimWVOkh9dVqVMr5tBWXhAd5oWvUdH8Lo4Tq37eYOhcVLxoukRR2vrY8mt7wSULSw==
