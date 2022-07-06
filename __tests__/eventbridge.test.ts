@@ -41,7 +41,19 @@ describe("EventBridge assertions", () => {
   });
 
   afterAll(async () => {
-    await slsEventBridgeClient.destroy();
+    await awsEventBridgeClient
+      .removeTargets({
+        EventBusName: "TestEventBus",
+        Rule: slsEventBridgeClient.ruleName || `test-TestEventBus-rule`,
+        Ids: ["1"],
+      })
+      .promise();
+    await awsEventBridgeClient
+      .deleteRule({
+        EventBusName: "TestEventBus",
+        Name: slsEventBridgeClient.ruleName || `test-TestEventBus-rule`,
+      })
+      .promise();
     await awsEventBridgeClient
       .deleteEventBus({ Name: "TestEventBus" })
       .promise();
