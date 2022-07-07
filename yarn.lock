@@ -1407,7 +1407,8 @@ acorn-jsx@^5.3.1:
 
 acorn-walk@^8.1.1, acorn-walk@^8.2.0:
   version "8.2.0"
-  resolved "https://registry.npmjs.org/acorn-walk/-/acorn-walk-8.2.0.tgz"
+  resolved "https://registry.yarnpkg.com/acorn-walk/-/acorn-walk-8.2.0.tgz#741210f2e2426454508853a2f44d0ab83b7f69c1"
+  integrity sha512-k+iyHEuPgSw6SbuDpGQM+06HQUa04DZ3o+F6CSzXMvvI5KMvnaEqXe+YVe555R9nn6GPt404fos4wcgpw12SDA==
 
 acorn@^7.4.0:
   version "7.4.1"
@@ -2158,7 +2159,11 @@ date-fns@^2.16.1:
   version "2.27.0"
   resolved "https://registry.npmjs.org/date-fns/-/date-fns-2.27.0.tgz"
 
+<<<<<<< HEAD
 debug@4, debug@4.3.4, debug@^4.3.4:
+=======
+debug@4, debug@4.3.4:
+>>>>>>> 41dd6a2 (fixed yarn.lock for good.)
   version "4.3.4"
   resolved "https://registry.yarnpkg.com/debug/-/debug-4.3.4.tgz#1319f6579357f2338d3337d2cdd4914bb5dcc865"
   integrity sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==
@@ -2177,7 +2182,11 @@ debug@^3.2.7:
   dependencies:
     ms "^2.1.1"
 
+<<<<<<< HEAD
 debug@^4.0.1, debug@^4.3.2:
+=======
+debug@^4.0.1, debug@^4.3.1, debug@^4.3.2:
+>>>>>>> 41dd6a2 (fixed yarn.lock for good.)
   version "4.3.3"
   resolved "https://registry.npmjs.org/debug/-/debug-4.3.3.tgz"
   dependencies:
@@ -2399,6 +2408,7 @@ es-abstract@^1.19.0, es-abstract@^1.19.1:
     string.prototype.trimstart "^1.0.4"
     unbox-primitive "^1.0.1"
 
+<<<<<<< HEAD
 es-abstract@^1.19.5:
   version "1.20.1"
   resolved "https://registry.yarnpkg.com/es-abstract/-/es-abstract-1.20.1.tgz#027292cd6ef44bd12b1913b828116f54787d1814"
@@ -2428,6 +2438,8 @@ es-abstract@^1.19.5:
     string.prototype.trimstart "^1.0.5"
     unbox-primitive "^1.0.2"
 
+=======
+>>>>>>> 41dd6a2 (fixed yarn.lock for good.)
 es-array-method-boxes-properly@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/es-array-method-boxes-properly/-/es-array-method-boxes-properly-1.0.0.tgz#873f3e84418de4ee19c5be752990b2e44718d09e"
@@ -3161,10 +3173,16 @@ graceful-fs@^4.1.6, graceful-fs@^4.2.0:
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.10.tgz#147d3a006da4ca3ce14728c7aefc287c367d7a6c"
   integrity sha512-9ByhssR2fPVsNZj478qUUbKfmL0+t5BDVyjShtyZZLiK7ZDAArFFfopyOTj0M05wE2tJPisA4iTnnXl2YoPvOA==
 
+<<<<<<< HEAD
 has-bigints@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/has-bigints/-/has-bigints-1.0.2.tgz#0871bd3e3d51626f6ca0966668ba35d5602d6eaa"
   integrity sha512-tSvCKtBr9lkF0Ex0aQiP9N+OpV4zi2r/Nee5VkRDbaqv35RLYMzbwQfFSZZH0kR+Rd6302UJZ2p/bJCEoR3VoQ==
+=======
+has-bigints@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.npmjs.org/has-bigints/-/has-bigints-1.0.1.tgz"
+>>>>>>> 41dd6a2 (fixed yarn.lock for good.)
 
 has-flag@^3.0.0:
   version "3.0.0"
@@ -3241,6 +3259,7 @@ http-errors@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/http-errors/-/http-errors-2.0.0.tgz#b7774a1486ef73cf7667ac9ae0858c012c57b9d3"
   integrity sha512-FtwrG/euBzaEjYeRqOgly7G0qviiXoJWnvEH2Z1plBdXgbyjv34pHTSb9zoeHMyDy33+DWy5Wt9Wo+TURtOYSQ==
+<<<<<<< HEAD
   dependencies:
     depd "2.0.0"
     inherits "2.0.4"
@@ -3262,6 +3281,29 @@ https-proxy-agent@5, https-proxy-agent@^5.0.0:
   resolved "https://registry.yarnpkg.com/https-proxy-agent/-/https-proxy-agent-5.0.1.tgz#c59ef224a04fe8b754f3db0063a25ea30d0005d6"
   integrity sha512-dFcAjpTQFgoLMzC2VwU+C/CbS7uRL0lWmxDITmqm7C+7F0Odmj6s9l6alZc6AELXhrnggM2CeWSXHGOdX2YtwA==
   dependencies:
+=======
+  dependencies:
+    depd "2.0.0"
+    inherits "2.0.4"
+    setprototypeof "1.2.0"
+    statuses "2.0.1"
+    toidentifier "1.0.1"
+
+http-proxy-agent@^4.0.0, http-proxy-agent@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/http-proxy-agent/-/http-proxy-agent-4.0.1.tgz#8a8c8ef7f5932ccf953c296ca8291b95aa74aa3a"
+  integrity sha512-k0zdNgqWTGA6aeIRVpvfVob4fL52dTfaehylg0Y4UvSySvOq/Y+BOyPrgpUrA7HylqvU8vIZGsRuXmspskV0Tg==
+  dependencies:
+    "@tootallnate/once" "1"
+    agent-base "6"
+    debug "4"
+
+https-proxy-agent@5, https-proxy-agent@^5.0.0:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/https-proxy-agent/-/https-proxy-agent-5.0.1.tgz#c59ef224a04fe8b754f3db0063a25ea30d0005d6"
+  integrity sha512-dFcAjpTQFgoLMzC2VwU+C/CbS7uRL0lWmxDITmqm7C+7F0Odmj6s9l6alZc6AELXhrnggM2CeWSXHGOdX2YtwA==
+  dependencies:
+>>>>>>> 41dd6a2 (fixed yarn.lock for good.)
     agent-base "6"
     debug "4"
 
@@ -3617,12 +3659,18 @@ is-set@^2.0.2:
   resolved "https://registry.yarnpkg.com/is-set/-/is-set-2.0.2.tgz#90755fa4c2562dc1c5d4024760d6119b94ca18ec"
   integrity sha512-+2cnTEZeY5z/iXGbLhPrOAaK/Mau5k5eXq9j14CpRTftq0pAJu2MwVRSZhyZWBzx3o6X795Lz6Bpb6R0GKf37g==
 
+<<<<<<< HEAD
 is-shared-array-buffer@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/is-shared-array-buffer/-/is-shared-array-buffer-1.0.2.tgz#8f259c573b60b6a32d4058a1a07430c0a7344c79"
   integrity sha512-sqN2UDu1/0y6uvXyStCOzyhAjCSlHceFoMKJW8W9EU9cvic/QdsZ0kEU93HEy3IUEFZIiH/3w+AH/UQbPHNdhA==
   dependencies:
     call-bind "^1.0.2"
+=======
+is-shared-array-buffer@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.npmjs.org/is-shared-array-buffer/-/is-shared-array-buffer-1.0.1.tgz"
+>>>>>>> 41dd6a2 (fixed yarn.lock for good.)
 
 is-ssh@^1.3.0:
   version "1.3.2"
@@ -3866,11 +3914,14 @@ json5@^2.1.1:
   dependencies:
     minimist "^1.2.5"
 
+<<<<<<< HEAD
 json5@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/json5/-/json5-2.2.1.tgz#655d50ed1e6f95ad1a3caababd2b0efda10b395c"
   integrity sha512-1hqLFMSrGHRHxav9q9gNjJ5EXznIxGVO09xQRrwplcS8qs28pZ8s8hupZAmqDwZUmVZ2Qb2jnyPOWcDH8m8dlA==
 
+=======
+>>>>>>> 41dd6a2 (fixed yarn.lock for good.)
 jsonfile@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/jsonfile/-/jsonfile-4.0.0.tgz#8771aae0799b64076b76640fca058f9c10e33ecb"
@@ -4074,6 +4125,14 @@ mime-db@1.47.0:
   version "1.47.0"
   resolved "https://registry.npmjs.org/mime-db/-/mime-db-1.47.0.tgz"
 
+<<<<<<< HEAD
+=======
+mime-db@1.52.0:
+  version "1.52.0"
+  resolved "https://registry.yarnpkg.com/mime-db/-/mime-db-1.52.0.tgz#bbabcdc02859f4987301c856e3387ce5ec43bf70"
+  integrity sha512-sPU4uV7dYlvtWJxwwxHD0PuihVNiE7TyAbQ5SWxDCB9mUYvOgroQOwYQQOKPJ8CIbE+1ETVlOoK1UC2nU3gYvg==
+
+>>>>>>> 41dd6a2 (fixed yarn.lock for good.)
 mime-types@2.1.35:
   version "2.1.35"
   resolved "https://registry.yarnpkg.com/mime-types/-/mime-types-2.1.35.tgz#381a871b62a734450660ae3deee44813f70d959a"
@@ -4598,6 +4657,7 @@ promise.allsettled@1.0.5:
     get-intrinsic "^1.1.1"
     iterate-value "^1.0.2"
 
+<<<<<<< HEAD
 protocols@^1.4.0:
   version "1.4.8"
   resolved "https://registry.npmjs.org/protocols/-/protocols-1.4.8.tgz"
@@ -4607,6 +4667,12 @@ protocols@^2.0.1:
   resolved "https://registry.yarnpkg.com/protocols/-/protocols-2.0.1.tgz#8f155da3fc0f32644e83c5782c8e8212ccf70a86"
   integrity sha512-/XJ368cyBJ7fzLMwLKv1e4vLxOju2MNAIokcr7meSaNcVbWz/CPcW22cP04mwxOErdA5mwjA8Q6w/cdAQxVn7Q==
 
+=======
+protocols@^1.1.0, protocols@^1.4.0:
+  version "1.4.8"
+  resolved "https://registry.npmjs.org/protocols/-/protocols-1.4.8.tgz"
+
+>>>>>>> 41dd6a2 (fixed yarn.lock for good.)
 proxy-agent@5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/proxy-agent/-/proxy-agent-5.0.0.tgz#d31405c10d6e8431fde96cba7a0c027ce01d633b"
@@ -5676,8 +5742,12 @@ uuid@8.0.0:
 
 uuid@8.3.2:
   version "8.3.2"
+<<<<<<< HEAD
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
+=======
+  resolved "https://registry.npmjs.org/uuid/-/uuid-8.3.2.tgz"
+>>>>>>> 41dd6a2 (fixed yarn.lock for good.)
 
 v8-compile-cache@^2.0.3:
   version "2.3.0"
@@ -5733,6 +5803,11 @@ widest-line@^3.1.0:
   resolved "https://registry.npmjs.org/widest-line/-/widest-line-3.1.0.tgz"
   dependencies:
     string-width "^4.0.0"
+
+wildcard-match@5.1.2:
+  version "5.1.2"
+  resolved "https://registry.yarnpkg.com/wildcard-match/-/wildcard-match-5.1.2.tgz#66b438001391674d8599b45da051e0bd9f33cd2a"
+  integrity sha512-qNXwI591Z88c8bWxp+yjV60Ch4F8Riawe3iGxbzquhy8Xs9m+0+SLFBGb/0yCTIDElawtaImC37fYZ+dr32KqQ==
 
 windows-release@^4.0.0:
   version "4.0.0"
