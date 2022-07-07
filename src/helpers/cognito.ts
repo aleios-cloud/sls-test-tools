@@ -105,10 +105,6 @@ const createUser = async (
     updated_at: String(chance.timestamp()),
   };
 
-  console.log(allAttributes.birthdate);
-
-  console.log(createUserInput.standardAttributes);
-
   const attributes: Array<AttributeType> | undefined =
     createUserInput.standardAttributes?.map(
       (attribute: keyof StandardAttributes) => {
@@ -126,7 +122,6 @@ const createUser = async (
       Password: password,
       UserAttributes: attributes,
     };
-    console.log(signUpParams);
     await cognitoClient.signUp(signUpParams).promise();
   } catch (e) {
     console.log(e);
