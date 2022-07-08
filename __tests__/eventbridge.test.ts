@@ -40,6 +40,40 @@ describe("EventBridge assertions", () => {
     expect(events).not.toHaveEvent();
   });
 
+  test("toHaveEventWithSource should pass if event is created with correct source", async () => {
+    await slsEventBridgeClient.publishEvent(
+      "TestSource",
+      "TestDetailType",
+      JSON.stringify({ Detail: "TestDetail" }),
+      false
+    );
+    const events = await slsEventBridgeClient.getEvents();
+    expect(events).toHaveEventWithSource("TestSource");
+  });
+
+  test("toHaveEventWithSource should pass if event is created with wrong source", async () => {
+    await slsEventBridgeClient.publishEvent(
+      "TestSource1",
+      "TestDetailType",
+      JSON.stringify({ Detail: "TestDetail" }),
+      false
+    );
+    const events = await slsEventBridgeClient.getEvents();
+    expect(events).not.toHaveEventWithSource("TestSource");
+  });
+
+  test("toHaveEventWithSource should fail if event is not created", async () => {
+    await slsEventBridgeClient.publishEvent(
+      "TestSource",
+      "TestDetailType",
+      JSON.stringify({ Detail: "TestDetail" }),
+      false
+    );
+    await slsEventBridgeClient.getEvents();
+    const events = await slsEventBridgeClient.getEvents();
+    expect(events).not.toHaveEventWithSource("TestSource");
+  });
+
   afterAll(async () => {
     await awsEventBridgeClient
       .removeTargets({
