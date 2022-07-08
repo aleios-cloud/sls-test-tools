@@ -9,6 +9,7 @@ import toHaveCompletedExecutionWithStatus from "./toHaveCompletedExecutionWithSt
 import toContainItemWithValues from "./toContainItemWithValues";
 import toMatchStateMachineOutput from "./toMatchStateMachineOutput";
 import toContainUser from "./toContainUser";
+import toContainUserWithAttributes from "./toContainUserWithAttributes";
 
 export default {
   ...toExistAsS3Bucket,
@@ -22,4 +23,5 @@ export default {
   ...toContainItemWithValues,
   ...toMatchStateMachineOutput,
   ...toContainUser,
+  ...toContainUserWithAttributes,
 };

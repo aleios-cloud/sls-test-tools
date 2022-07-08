@@ -92,10 +92,15 @@ Note: these assertions also require "await"
 
 ### Cognito
 
-Note: this assertion also requires "await"
+Note: these assertions also require "await"
 
 ```
   await expect('USER_POOL_ID').toContainUser('USERNAME');
+  await expect('USER_POOL_ID').toContainUserWithAttributes({
+    Username: 'USERNAME',
+    email: 'EMAIL@EMAIL.EMAIL',
+    // and so on for all cognito user standard attributes
+  });
 ```
 
 ## Helpers
@@ -116,16 +121,16 @@ An interface to the deployed EventBridge, allowing events to be injected and int
 #### Static
 
 ```
-    EventBridge.build(busName) - create a EventBridge instance to allow events to be injected and intercepted
+EventBridge.build(busName) - create a EventBridge instance to allow events to be injected and intercepted
 ```
 
 #### Instance
 
 ```
-    eventBridge.publishEvent(source, detailType, detail) - publish an event to the bus
-    eventBridge.getEvents() - get the events that have been sent to the bus
-    eventBridge.clear() - clear old messages
-    eventBridge.destroy() - remove infastructure used to track events
+eventBridge.publishEvent(source, detailType, detail) - publish an event to the bus
+eventBridge.getEvents() - get the events that have been sent to the bus
+eventBridge.clear() - clear old messages
+eventBridge.destroy() - remove infastructure used to track events
 ```
 
 ### Step Functions
@@ -135,13 +140,13 @@ An interface to a deployed Step Function, with a function to execute a Step Func
 #### Static
 
 ```
-  StepFunctions.build() // create a Step Functions Client for executing existing state machines
+StepFunctions.build() // create a Step Functions Client for executing existing state machines
 ```
 
 #### Instance
 
 ```
-  stepFunctions.runExecution(stateMachineName, input) // executes state machine until completion
+stepFunctions.runExecution(stateMachineName, input) // executes state machine until completion
 ```
 
 ### Cognito
@@ -446,6 +451,7 @@ An interface to a deployed Step Function, with a function to execute a Step Func
 - To avoid issues we recommend `--runInBand`
 
 ```
+
 import { AWSClient, EventBridge } from "sls-test-tools";
 
 const lambda = new AWSClient.Lambda()
@@ -463,27 +469,27 @@ describe("Integration Testing Event Bridge", () => {
 
   it("correctly publishes an event to the event bus when the lambda is invoked", async () => {
     const event = {
-      body: JSON.stringify({
-        filename: filename,
-      }),
-    };
+    body: JSON.stringify({
+      filename: filename,
+    }),
+  };
 
     // Invoke Lambda Function
-    const params = {
-      FunctionName: "event-bridge-example-dev-service1",
-      Payload: JSON.stringify(event),
-    };
-    await lambda.invoke(params).promise();
+  const params = {
+    FunctionName: "event-bridge-example-dev-service1",
+    Payload: JSON.stringify(event),
+  };
+  await lambda.invoke(params).promise();
 
-    const eventBridgeEvents = await eventBridge.getEvents()
-    expect(eventBridgeEvents).toHaveEvent();
-    expect(eventBridgeEvents).toHaveEventWithSource("order.created");
-  });
+  const eventBridgeEvents = await eventBridge.getEvents()
+  expect(eventBridgeEvents).toHaveEvent();
+  expect(eventBridgeEvents).toHaveEventWithSource("order.created");
+});
 
-  it("correctly generates a PDF when an order is created", async () => {
-    const bucketName = example-bucket
-    await eventBridge
-      .publishEvent("order.created", "example", JSON.stringify({ filename: filename }));
+it("correctly generates a PDF when an order is created", async () => {
+const bucketName = example-bucket
+await eventBridge
+.publishEvent("order.created", "example", JSON.stringify({ filename: filename }));
 
     await sleep(5000); // wait 5 seconds to allow event to pass
 
@@ -496,7 +502,9 @@ describe("Integration Testing Event Bridge", () => {
     await expect("example-dev-thumbnails-bucket").toHaveS3ObjectWithNameEqualTo(
       filename
     );
-  });
+
+});
+
 ```
 
 ## Contributors ✨
@@ -511,6 +519,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://medium.com/serverless-transformation"><img src="https://avatars1.githubusercontent.com/u/11080984?v=4" width="100px;" alt=""/><br /><sub><b>Ben Ellerby</b></sub></a><br /><a href="https://github.com/BenEllerby/sls-test-tools/commits?author=BenEllerby" title="Code">💻</a> <a href="#content-BenEllerby" title="Content">🖋</a> <a href="https://github.com/BenEllerby/sls-test-tools/commits?author=BenEllerby" title="Documentation">📖</a> <a href="#ideas-BenEllerby" title="Ideas, Planning, & Feedback">🤔</a> <a href="#design-BenEllerby" title="Design">🎨</a> <a href="#talk-BenEllerby" title="Talks">📢</a> <a href="https://github.com/BenEllerby/sls-test-tools/pulls?q=is%3Apr+reviewed-by%3ABenEllerby" title="Reviewed Pull Requests">👀</a></td>
     <td align="center"><a href="https://medium.com/serverless-transformation"><img src="https://avatars.githubusercontent.com/hamilton-s" width="100px;" alt=""/><br /><sub><b>Sarah Hamilton</b></sub></a><br /><a href="https://github.com/BenEllerby/sls-test-tools/commits?author=hamilton-s" title="Code">💻</a> <a href="#content-hamilton-s" title="Content">🖋</a> <a href="https://github.com/BenEllerby/sls-test-tools/commits?author=hamilton-s" title="Documentation">📖</a> <a href="#ideas-hamilton-s" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="https://github.com/agwhi"><img src="https://avatars.githubusercontent.com/agwhi" width="100px;" alt=""/><br /><sub><b>Alex White</b></sub></a><br /><a href="https://github.com/BenEllerby/sls-test-tools/commits?author=agwhi" title="Code">💻</a><a href="https://github.com/BenEllerby/sls-test-tools/commits?author=agwhi" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/joel-aleios"><img src="https://github.com/joel-aleios.png" width="100px;" alt=""/><br /><sub><b>Joel Hamilton</b></sub></a><br /><a href="https://github.com/BenEllerby/sls-test-tools/commits?author=joel-aleios"  title="Code">💻</a><a href="https://github.com/BenEllerby/sls-test-tools/commits?author=joel-alieos" title="Documentation">📖</a></td>
   </tr>
 </table>
 
@@ -520,3 +529,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+
+```
+
+```
