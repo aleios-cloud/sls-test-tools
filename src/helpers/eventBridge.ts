@@ -130,7 +130,10 @@ export default class EventBridge {
       })
       .promise();
 
-    if (clear === false) {
+    if (clear === undefined) {
+      clear = true;
+    }
+    if (!clear) {
       return result;
     }
     await this.getEvents(); // need to clear this manual published event from the SQS observer queue.
@@ -138,7 +141,9 @@ export default class EventBridge {
     return result;
   }
 
-  async getEvents(): Promise<SQS.ReceiveMessageResult | undefined> {
+  async getEvents(
+    clear?: boolean | undefined
+  ): Promise<SQS.ReceiveMessageResult | undefined> {
     if (this.QueueUrl === undefined) {
       throw new Error("QueueUrl is undefined");
     }
@@ -153,6 +158,14 @@ export default class EventBridge {
       );
     }
     const result = await this.sqsClient.receiveMessage(queueParams).promise();
+
+    if (clear === undefined) {
+      clear = true;
+    }
+
+    if (!clear) {
+      return result;
+    }
 
     const messageHandlers = removeUndefinedMessages(
       result.Messages?.map((message: SQS.Message) => ({
