@@ -17,6 +17,8 @@
   "license": "MIT",
   "scripts": {
     "build": "rm -rf lib && yarn package:cjs && yarn package:esm && yarn package:types",
+    "contributors:add": "all-contributors add",
+    "contributors:generate": "all-contributors generate",
     "dev": "rm -rf lib && concurrently 'yarn:package:* --watch'",
     "lint": "eslint ./src",
     "fix": "yarn lint --fix",
@@ -46,6 +48,7 @@
     "@typescript-eslint/eslint-plugin": "^5.6.0",
     "@typescript-eslint/parser": "^5.6.0",
     "@zerollup/ts-transform-paths": "^1.7.18",
+    "all-contributors-cli": "^6.20.0",
     "babel-plugin-macros": "^3.1.0",
     "babel-plugin-module-resolver": "^4.1.0",
     "concurrently": "^6.0.0",
