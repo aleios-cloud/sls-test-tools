@@ -91,6 +91,72 @@ describe("EventBridge assertions", () => {
     expect(events?.Messages?.length).toBe(undefined);
   });
 
+  test("destroy helper should delete queue, and eventbus rules & targets.", async () => {
+    let rules;
+    let targets;
+    const busName = "destroyTestingEventBus";
+    const testingAwsEventBridgeClient = new AWSEventBridge({
+      region: "eu-west-2",
+    });
+    // creating event bus
+    await testingAwsEventBridgeClient
+      .createEventBus({
+        Name: busName,
+      })
+      .promise();
+    const testingSlsEventBridgeClient = await EventBridge.build(busName);
+    // get rules and check that rule has been created
+    rules = await testingSlsEventBridgeClient.eventBridgeClient
+      ?.listRules({
+        EventBusName: busName,
+      })
+      .promise();
+    expect(rules?.Rules?.length).toBeGreaterThan(0);
+    // get rule targets and see that target has been assigned to rule
+    targets = await testingSlsEventBridgeClient.eventBridgeClient
+      ?.listTargetsByRule({
+        EventBusName: busName,
+        Rule: testingSlsEventBridgeClient.ruleName || `test-${busName}-rule`,
+      })
+      .promise();
+    expect(targets?.Targets?.length).toBeGreaterThan(0);
+    const testingSqsClient = new SQS();
+    let queueExists = true;
+    // check that queue exists
+    let attributes = (
+      await testingSqsClient
+        .getQueueAttributes({
+          QueueUrl: slsEventBridgeClient.QueueUrl || "",
+        })
+        .promise()
+    ).Attributes;
+    attributes === undefined ? (queueExists = true) : (queueExists = false);
+    expect(queueExists).toBe(true);
+    // call destroy
+    await testingSlsEventBridgeClient.destroy();
+
+    // check that there are no more rules
+    rules = await testingSlsEventBridgeClient.eventBridgeClient
+      ?.listRules({
+        EventBusName: busName,
+      })
+      .promise();
+    expect(rules?.Rules?.length).toBe(0);
+    // check that the queue no longer exists
+    attributes = (
+      await testingSqsClient
+        .getQueueAttributes({
+          QueueUrl: slsEventBridgeClient.QueueUrl || "",
+        })
+        .promise()
+    ).Attributes;
+    attributes === undefined ? (queueExists = false) : (queueExists = true);
+    expect(queueExists).toBe(false);
+    await testingAwsEventBridgeClient
+      .deleteEventBus({ Name: busName })
+      .promise();
+  });
+
   afterAll(async () => {
     await awsEventBridgeClient
       .removeTargets({
