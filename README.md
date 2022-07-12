@@ -122,8 +122,8 @@ An interface to the deployed EventBridge, allowing events to be injected and int
 #### Instance
 
 ```
-    eventBridge.publishEvent(source, detailType, detail) - publish an event to the bus
-    eventBridge.getEvents() - get the events that have been sent to the bus
+    eventBridge.publishEvent(source, detailType, detail, clear?) - publish an event to the bus
+    eventBridge.getEvents(clear?) - get the events that have been sent to the bus
     eventBridge.clear() - clear old messages
     eventBridge.destroy() - remove infastructure used to track events
 ```

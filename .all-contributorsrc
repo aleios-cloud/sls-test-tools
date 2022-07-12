@@ -37,6 +37,16 @@
       "contributions": [
         "code",
       ]
+    },
+    {
+      "login": "joelhamiltondev",
+      "name": "Joel Hamilton",
+      "avatar_url": "https://avatars.githubusercontent.com/joelhamiltondev",
+      "profile": "https://github.com/joelhamiltondev",
+      "contributions": [
+        "code",
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
