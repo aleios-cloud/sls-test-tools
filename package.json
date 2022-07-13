@@ -17,6 +17,8 @@
   "license": "MIT",
   "scripts": {
     "build": "rm -rf lib && yarn package:cjs && yarn package:esm && yarn package:types",
+    "contributors:add": "all-contributors add",
+    "contributors:generate": "all-contributors generate",
     "dev": "rm -rf lib && concurrently 'yarn:package:* --watch'",
     "lint": "eslint ./src",
     "fix": "yarn lint --fix",
@@ -32,6 +34,7 @@
     "chance": "^1.1.8",
     "import-all.macro": "^3.1.0",
     "json-schema-faker": "^0.5.0-rcv.42",
+    "uuid": "^8.3.2",
     "yargs": "^17.3.1"
   },
   "devDependencies": {
@@ -40,10 +43,12 @@
     "@babel/plugin-transform-runtime": "^7.16.0",
     "@babel/preset-env": "^7.16.0",
     "@babel/preset-typescript": "^7.16.0",
+    "@types/jest": "^28.1.4",
     "@types/yargs": "^17.0.8",
     "@typescript-eslint/eslint-plugin": "^5.6.0",
     "@typescript-eslint/parser": "^5.6.0",
     "@zerollup/ts-transform-paths": "^1.7.18",
+    "all-contributors-cli": "^6.20.0",
     "babel-plugin-macros": "^3.1.0",
     "babel-plugin-module-resolver": "^4.1.0",
     "concurrently": "^6.0.0",
@@ -53,12 +58,14 @@
     "eslint-import-resolver-typescript": "^2.5.0",
     "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-prettier": "^4.0.0",
+    "jest": "^28.1.2",
     "prettier": "^2.2.1",
-    "release-it": "^14.12.5",
+    "release-it": "^14.12.4",
+    "ts-jest": "^28.0.5",
     "ts-migrate": "^0.1.27",
     "ts-node": "^10.4.0",
     "ttypescript": "^1.5.12",
-    "typescript": "^4.5.2"
+    "typescript": "^4.7.4"
   },
   "babel": {
     "presets": [

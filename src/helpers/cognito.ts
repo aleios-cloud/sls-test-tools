@@ -108,17 +108,6 @@ const createUser = async (
     updated_at: String(chance.timestamp()),
   };
 
-<<<<<<< HEAD
-  const attributes: Array<AttributeType> | undefined =
-    createUserInput.standardAttributes?.map(
-      (attribute: keyof StandardAttributes) => {
-        return {
-          Name: attribute,
-          Value: allAttributes[attribute],
-        };
-      }
-    );
-=======
   const attributesArg: AttributeType[] = [];
   jsf.extend("chance", () => new Chance());
   if (createUserInput.customAttributes !== undefined) {
@@ -138,7 +127,6 @@ const createUser = async (
       });
     }
   );
->>>>>>> 8fe5b2b (got the createUser helpers supporting custom attributes)
 
   try {
     const signUpParams: CognitoIdentityServiceProvider.Types.SignUpRequest = {

@@ -1,13 +1,21 @@
 import { testResult, TestResultOutput } from "utils/testResult";
+import { SQS } from "aws-sdk";
 
 export default {
   toHaveEventWithSource(
-    { Messages }: { Messages: [{ Body: string }] },
+    Events: SQS.ReceiveMessageResult,
     expectedSourceName: string
   ): TestResultOutput {
     let message;
 
-    const parsedBody = JSON.parse(Messages[0].Body) as { source?: string };
+    if (Events.Messages === undefined || Events.Messages.length < 1) {
+      return testResult("There are no events present.", false);
+    }
+
+    const parsedBody = JSON.parse(Events.Messages[0].Body) as {
+      source?: string;
+    };
+
     if (parsedBody.source === expectedSourceName) {
       message = `expected sent event to have source ${expectedSourceName}`;
 

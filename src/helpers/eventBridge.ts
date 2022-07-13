@@ -27,14 +27,14 @@ export default class EventBridge {
     this.ruleName = ruleNameArg ? ruleNameArg.split("=")[1] : `test-${eventBridgeName}-rule`;
     const queueNameArg = process.argv.filter((x) => x.startsWith("--queue-name="))[0];
     const queueName = queueNameArg ? queueNameArg.split("=")[1] : `${eventBridgeName}-testing-queue`;
-    
+
     this.sqsClient = new AWSClient.SQS();
     if (!this.keep) {
       console.info(
         "If running repeatedly add '--keep=true' to keep testing resources up to avoid creation throttles"
       );
     }
-  
+
     const queueResult = await this.sqsClient
       .createQueue({
         QueueName: queueName,
@@ -109,7 +109,8 @@ export default class EventBridge {
   async publishEvent(
     source: string | undefined,
     detailType: string | undefined,
-    detail: string | undefined
+    detail: string | undefined,
+    clear?: boolean
   ): Promise<PromiseResult<AWSEventBridge.PutEventsResponse, AWSError>> {
     if (this.eventBridgeClient === undefined) {
       throw new Error(
@@ -129,12 +130,20 @@ export default class EventBridge {
       })
       .promise();
 
+    if (clear === undefined) {
+      clear = true;
+    }
+    if (!clear) {
+      return result;
+    }
     await this.getEvents(); // need to clear this manual published event from the SQS observer queue.
 
     return result;
   }
 
-  async getEvents(): Promise<SQS.ReceiveMessageResult | undefined> {
+  async getEvents(
+    clear?: boolean | undefined
+  ): Promise<SQS.ReceiveMessageResult | undefined> {
     if (this.QueueUrl === undefined) {
       throw new Error("QueueUrl is undefined");
     }
@@ -149,6 +158,14 @@ export default class EventBridge {
       );
     }
     const result = await this.sqsClient.receiveMessage(queueParams).promise();
+
+    if (clear === undefined) {
+      clear = true;
+    }
+
+    if (!clear) {
+      return result;
+    }
 
     const messageHandlers = removeUndefinedMessages(
       result.Messages?.map((message: SQS.Message) => ({

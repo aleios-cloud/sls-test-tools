@@ -1,4 +1,3 @@
-
 {
   "files": [
     "README.md"
@@ -26,7 +25,7 @@
       "profile": "https://github.com/hamilton-s",
       "contributions": [
         "code",
-        "doc",
+        "doc"
       ]
     },
     {
@@ -35,7 +34,16 @@
       "avatar_url": "https://avatars.githubusercontent.com/agwhi",
       "profile": "https://github.com/agwhi",
       "contributions": [
-        "code",
+        "code"
+      ]
+    },
+    {
+      "login": "joelhamiltondev",
+      "name": "Joel Hamilton",
+      "avatar_url": "https://avatars.githubusercontent.com/joelhamiltondev",
+      "profile": "https://github.com/joelhamiltondev",
+      "contributions": [
+        "code"
       ]
     }
   ],
@@ -44,5 +52,6 @@
   "projectOwner": "BenEllerby",
   "repoType": "github",
   "repoHost": "https://github.com",
-  "skipCi": true
+  "skipCi": true,
+  "commitConvention": "none"
 }
