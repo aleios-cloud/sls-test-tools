@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-import { AWSError, EventBridge as AWSEventBridge, SQS } from "aws-sdk";
+import { AWSError, EventBridge as AWSEventBridge, DynamoDB, Lambda } from "aws-sdk";
 import { PromiseResult } from "aws-sdk/lib/request";
 import { AWSClient, region } from "./general";
 import { removeUndefinedMessages } from "./utils/removeUndefinedMessages";
@@ -10,7 +10,7 @@ export default class EventBridge {
   eventBridgeName: string | undefined;
   keep: boolean | undefined;
   ruleName: string | undefined;
-  sqsClient: SQS | undefined;
+  dynamoClient: DynamoDB | undefined;
   targetId: string | undefined;
 
   async init(eventBridgeName: string): Promise<void> {
@@ -25,29 +25,98 @@ export default class EventBridge {
     this.keep = keepArgEnabled || keepEnvVarEnabled;
     const ruleNameArg = process.argv.filter((x) => x.startsWith("--event-rule-name="))[0];
     this.ruleName = ruleNameArg ? ruleNameArg.split("=")[1] : `test-${eventBridgeName}-rule`;
-    const queueNameArg = process.argv.filter((x) => x.startsWith("--queue-name="))[0];
-    const queueName = queueNameArg ? queueNameArg.split("=")[1] : `${eventBridgeName}-testing-queue`;
+    const tableNameArg = process.argv.filter((x) => x.startsWith("--table-name="))[0];
+    const tableName : string = tableNameArg ? tableNameArg.split("=")[1] : `${eventBridgeName}-testing-table`;
+    let tableArn : string;
 
-    this.sqsClient = new AWSClient.SQS();
     if (!this.keep) {
       console.info(
         "If running repeatedly add '--keep=true' to keep testing resources up to avoid creation throttles"
       );
     }
 
-    const queueResult = await this.sqsClient
-      .createQueue({
-        QueueName: queueName,
+    this.dynamoClient = new DynamoDB();
+    const tableResult: DynamoDB.CreateTableOutput = await this.dynamoClient
+      .createTable({
+        AttributeDefinitions: [
+          {
+            AttributeName: "pk",
+            AttributeType: "S",
+          },
+          {
+            AttributeName: "sk",
+            AttributeType: "S",
+          },
+        ],
+        KeySchema: [
+          {
+            AttributeName: "pk",
+            KeyType: "HASH",
+          },
+          {
+            AttributeName: "sk",
+            KeyType: "RANGE",
+          },
+        ],
+        TableName: tableName,
+        GlobalSecondaryIndexes: [
+          {
+            IndexName: "GSI1",
+            KeySchema: [
+              {
+                AttributeName: "gsi1pk",
+                KeyType: "HASH",
+              },
+              {
+                AttributeName: "gsi1sk",
+                KeyType: "RANGE",
+              },
+            ],
+            Projection: {
+              ProjectionType: ALL,
+            },
+          },
+          {
+            IndexName: "GSI2",
+            KeySchema: [
+              {
+                AttributeName: "gsi2pk",
+                KeyType: "HASH",
+              },
+              {
+                AttributeName: "gsi2sk",
+                KeyType: "RANGE",
+              },
+            ],
+            Projection: {
+              ProjectionType: ALL,
+            },
+          },
+          {
+            IndexName: "GSI3",
+            KeySchema: [
+              {
+                AttributeName: "gsi3pk",
+                KeyType: "HASH",
+              },
+              {
+                AttributeName: "gsi3sk",
+                KeyType: "RANGE",
+              },
+            ],
+            Projection: {
+              ProjectionType: ALL,
+            },
+          },
+        ],
       })
       .promise();
 
-    this.QueueUrl = queueResult.QueueUrl;
+    // this.QueueUrl = queueResult.QueueUrl;
 
-    if (this.QueueUrl === undefined) {
-      throw new Error("QueueUrl is undefined");
-    }
-    const accountId = this.QueueUrl.split("/")[3];
-    const sqsArn = `arn:aws:sqs:${region}:${accountId}:${queueName}`;
+    tableArn = tableResult.TableDescription?.TableArn;
+
+    const accountId : string = this.tableArn.split(":")[4];
     const pattern = {
       account: [`${accountId}`],
     };
@@ -61,13 +130,16 @@ export default class EventBridge {
       })
       .promise();
 
+    // const lambdaClient = new Lambda({region: region});
+    // lambdaClient.createFunction({})
+
     await this.eventBridgeClient
       .putTargets({
         EventBusName: eventBridgeName,
         Rule: this.ruleName,
         Targets: [
           {
-            Arn: sqsArn,
+            Arn: lambdaArn,
             Id: this.targetId,
           },
         ],
