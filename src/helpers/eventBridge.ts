@@ -3,6 +3,7 @@ import { AWSError, EventBridge as AWSEventBridge, SQS } from "aws-sdk";
 import { PromiseResult } from "aws-sdk/lib/request";
 import { AWSClient, region } from "./general";
 import { removeUndefinedMessages } from "./utils/removeUndefinedMessages";
+import { exec } from "child-process";
 
 export default class EventBridge {
   QueueUrl: string | undefined;
@@ -23,10 +24,18 @@ export default class EventBridge {
     const keepArgEnabled = keepArg ? keepArg.split("=")[1] === "true" : false;
     const keepEnvVarEnabled = !!process.env.SLS_TEST_TOOLS_KEEP;
     this.keep = keepArgEnabled || keepEnvVarEnabled;
-    const ruleNameArg = process.argv.filter((x) => x.startsWith("--event-rule-name="))[0];
-    this.ruleName = ruleNameArg ? ruleNameArg.split("=")[1] : `test-${eventBridgeName}-rule`;
-    const queueNameArg = process.argv.filter((x) => x.startsWith("--queue-name="))[0];
-    const queueName = queueNameArg ? queueNameArg.split("=")[1] : `${eventBridgeName}-testing-queue`;
+    const ruleNameArg = process.argv.filter((x) =>
+      x.startsWith("--event-rule-name=")
+    )[0];
+    this.ruleName = ruleNameArg
+      ? ruleNameArg.split("=")[1]
+      : `test-${eventBridgeName}-rule`;
+    const queueNameArg = process.argv.filter((x) =>
+      x.startsWith("--queue-name=")
+    )[0];
+    const queueName = queueNameArg
+      ? queueNameArg.split("=")[1]
+      : `${eventBridgeName}-testing-queue`;
 
     this.sqsClient = new AWSClient.SQS();
     if (!this.keep) {
@@ -35,44 +44,49 @@ export default class EventBridge {
       );
     }
 
-    const queueResult = await this.sqsClient
-      .createQueue({
-        QueueName: queueName,
-      })
-      .promise();
+    exec(
+      `cd ../infrastructure \n cdk deploy --parameters eventBusName=${eventBridgeName} --parameters accountId=${
+        cdk.Stack.of(this).account
+      }`
+    );
+    // const queueResult = await this.sqsClient
+    //   .createQueue({
+    //     QueueName: queueName,
+    //   })
+    //   .promise();
 
-    this.QueueUrl = queueResult.QueueUrl;
+    // this.QueueUrl = queueResult.QueueUrl;
 
-    if (this.QueueUrl === undefined) {
-      throw new Error("QueueUrl is undefined");
-    }
-    const accountId = this.QueueUrl.split("/")[3];
-    const sqsArn = `arn:aws:sqs:${region}:${accountId}:${queueName}`;
-    const pattern = {
-      account: [`${accountId}`],
-    };
+    // if (this.QueueUrl === undefined) {
+    //   throw new Error("QueueUrl is undefined");
+    // }
+    // const accountId = this.QueueUrl.split("/")[3];
+    // const sqsArn = `arn:aws:sqs:${region}:${accountId}:${queueName}`;
+    // const pattern = {
+    //   account: [`${accountId}`],
+    // };
 
-    await this.eventBridgeClient
-      .putRule({
-        Name: this.ruleName,
-        EventBusName: eventBridgeName,
-        EventPattern: JSON.stringify(pattern),
-        State: "ENABLED",
-      })
-      .promise();
+    // await this.eventBridgeClient
+    //   .putRule({
+    //     Name: this.ruleName,
+    //     EventBusName: eventBridgeName,
+    //     EventPattern: JSON.stringify(pattern),
+    //     State: "ENABLED",
+    //   })
+    //   .promise();
 
-    await this.eventBridgeClient
-      .putTargets({
-        EventBusName: eventBridgeName,
-        Rule: this.ruleName,
-        Targets: [
-          {
-            Arn: sqsArn,
-            Id: this.targetId,
-          },
-        ],
-      })
-      .promise();
+    // await this.eventBridgeClient
+    //   .putTargets({
+    //     EventBusName: eventBridgeName,
+    //     Rule: this.ruleName,
+    //     Targets: [
+    //       {
+    //         Arn: sqsArn,
+    //         Id: this.targetId,
+    //       },
+    //     ],
+    //   })
+    //   .promise();
 
     const policy = {
       Version: "2008-10-17",
