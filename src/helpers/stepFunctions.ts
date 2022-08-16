@@ -1,30 +1,47 @@
 import { StepFunctions as AWSStepFunctions } from "aws-sdk";
 import { AWSClient } from "./general";
 
-const API_POLLING_DELAY_MS = 1000;
+const DEFAULT_API_POLLING_DELAY_MS = 1000;
+
+type StepFunctionOptions = { apiPollingDelay?: number };
 
 export default class StepFunctions {
   stepFunctions: AWSStepFunctions | undefined;
   allStateMachines: AWSStepFunctions.ListStateMachinesOutput | undefined;
+  apiPollingDelay = DEFAULT_API_POLLING_DELAY_MS;
 
-  async init(): Promise<void> {
+  async init(options: StepFunctionOptions = {}): Promise<void> {
     this.stepFunctions = new AWSClient.StepFunctions();
     this.allStateMachines = await this.stepFunctions
       .listStateMachines()
       .promise();
+    const { apiPollingDelay } = options;
+    if (apiPollingDelay !== undefined && apiPollingDelay > 0) {
+      this.apiPollingDelay = apiPollingDelay;
+    }
   }
 
-  static async build(): Promise<StepFunctions> {
+  static async build(
+    options: StepFunctionOptions = {}
+  ): Promise<StepFunctions> {
     const stepFunction = new StepFunctions();
-    await stepFunction.init();
+    await stepFunction.init(options);
 
     return stepFunction;
   }
 
+  // eslint-disable-next-line max-params
   async runExecution(
     stateMachineName: string,
-    input: unknown
+    input: unknown,
+    options: StepFunctionOptions = {}
   ): Promise<AWSStepFunctions.DescribeExecutionOutput> {
+    const { apiPollingDelay } = options;
+    const executionApiPollingDelay =
+      apiPollingDelay !== undefined && apiPollingDelay > 0
+        ? apiPollingDelay
+        : this.apiPollingDelay;
+
     if (this.allStateMachines === undefined) {
       throw new Error(
         "The list of state machines is undefined. You might have forgotten to run build()."
@@ -63,7 +80,9 @@ export default class StepFunctions {
         .promise();
 
       // Wait before retrying to avoid throttle limits
-      await new Promise((resolve) => setTimeout(resolve, API_POLLING_DELAY_MS));
+      await new Promise((resolve) =>
+        setTimeout(resolve, executionApiPollingDelay)
+      );
     }
 
     return await this.stepFunctions
